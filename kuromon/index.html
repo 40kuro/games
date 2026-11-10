@@ -441,6 +441,7 @@ terrain({
   plain: { ch:".", name:"平地", cls:"p", cost:1, def:0, avo:0 },
   road: { ch:"R", name:"道", cls:"r", cost:1, def:0, avo:0 },
   forest: { ch:"F", name:"森", cls:"f", cost:2, def:1, avo:20 },
+  deep_forest: { ch:"D", name:"深い森", cls:"f", cost:Infinity, def:1, avo:20 },   // 木が密で地上の兵種は通れない(飛ぶ兵種は通れる)
   hill: { ch:"^", name:"丘", cls:"l", cost:2, cav:3, def:1, avo:10 },
   mountain: { ch:"m", name:"山", cls:"n", cost:3, cav:Infinity, heavy:Infinity, def:2, avo:30 },
   high_mountain: { ch:"M", name:"高い山", cls:"m", cost:Infinity, def:3, avo:40 },
@@ -1314,19 +1315,6 @@ character({
 
 return v; })(); RAW.characters[c.id] = c; }
 { const c = (() => { let v; const character = o => { v = o; };
-/* ジークムント。ゼーレンの貴族。ゼーレン城の前の砦で守りを固める。第2章の敵将(砦)。 */
-character({
-  id: "siegmund",
-  name: "ジークムント",
-  cls: "general",
-  weapon: "steel_sword",
-  bonus: { hp:6, str:1, def:3, res:1 },
-  gold: 3000,
-  profile: "ゼーレンの貴族。王都を守る砦を預かる、守りの堅い老将。",
-});
-
-return v; })(); RAW.characters[c.id] = c; }
-{ const c = (() => { let v; const character = o => { v = o; };
 /* ヴェラ。海賊船団の頭に育てられた弓の名手。弱い者から奪わない一本気な義賊。 血統: 弓使い・直系。 */
 character({
   id: "vera",
@@ -1425,7 +1413,7 @@ return v; })(); RAW.characters[c.id] = c; }
 RAW.chapters.push({ dir: "chapters/ch00", chapter: (() => { let v; const chapter = o => { v = o; };
 /* 序章 奪われた弓。山賊に落とされたユーリク城を取り返し、鷹弓ユーリクを持ち去ったロウエンの国境の城を攻める。
    地図は map.txt(70x30)、土地の見た目は land.txt、敵と仲間は units.js、会話は scenes.txt。
-   城1 ユーリク城 (37,14) は途中の拠点(holds)。取ると国境の跳ね橋 (52,14)(53,14) が下り、城2 から援軍が出て、マティアスが加わる。 */
+   本営は東 (67,20)。城1 ユーリク城 (32,23) は途中の拠点(holds)。取ると国境の跳ね橋 (16,8)(17,8) が下り、城2 から援軍が出て、マティアスが加わる。 */
 chapter({
   no: 0,
   label: "序章",
@@ -1434,29 +1422,29 @@ chapter({
   intro: "イリオスの王太子が、ザルク信者の反乱を討つため親征に出た。\nアルヴァ家もユーリク家も、当主が主力を連れて従っている。\n手薄になったユーリク城が、山賊に落とされた。",
   devLevel: 3,
   ease: { hp:3, str:2, skl:1 },
-  base: { at:[2, 14], look:"castle", shop:["iron_sword", "iron_lance", "iron_axe", "iron_bow", "javelin", "heal_staff"] },
+  base: { at:[67, 20], look:"castle", shop:["iron_sword", "iron_lance", "iron_axe", "iron_bow", "javelin", "heal_staff"] },
   villages: {
-    "9,4": { name:"山裾の村", title:"村の長の礼", text:"「山賊は北の山道からも下りてきます。若様、どうかお気をつけて」", reward:"1000", gold:1000 },
-    "27,4": { name:"麦の村", title:"粉ひきの預かり物", text:"城の兵に渡しそびれた手槍を、粉ひきが差し出した。", reward:"手槍", item:"javelin" },
-    "13,25": { name:"水車の村", title:"薬師の頼み", text:"「エマ様に薬を教わった者です。あの方を、どうか」", reward:"スピードリング", item:"speed_ring" },
-    "46,24": { name:"川べりの村", title:"渡し守の話", text:"「夜のうちに、布でくるんだ長いものを担いだ兵が、ロウエンの城へ渡っていきました」", reward:"鋼の弓・500", gold:500, item:"steel_bow" },
+    "60,4": { name:"山裾の村", title:"村の長の礼", text:"「山賊は北の山道からも下りてきます。若様、どうかお気をつけて」", reward:"1000", gold:1000 },
+    "42,4": { name:"麦の村", title:"粉ひきの預かり物", text:"城の兵に渡しそびれた手槍を、粉ひきが差し出した。", reward:"手槍", item:"javelin" },
+    "56,25": { name:"水車の村", title:"薬師の頼み", text:"「エマ様に薬を教わった者です。あの方を、どうか」", reward:"スピードリング", item:"speed_ring" },
+    "21,25": { name:"川べりの村", title:"渡し守の話", text:"「夜のうちに、布でくるんだ長いものを担いだ兵が、ロウエンの城へ渡っていきました」", reward:"鋼の弓・500", gold:500, item:"steel_bow" },
   },
   holds: {
-    "37,14": { name:"ユーリク城", text:"ユーリク城の旗を取り戻した。" },
+    "32,23": { name:"ユーリク城", text:"ユーリク城の旗を取り戻した。" },
   },
-  goal: { type:"seize", at:[65, 14], text:"ユーリク城を取り返し、レオニダスでロウエンの国境の城を制圧する", gold:1500 },
+  goal: { type:"seize", at:[4, 8], text:"ユーリク城を取り返し、レオニダスでロウエンの国境の城を制圧する", gold:1500 },
   lose: ["leonidas"],
   // 国境の跳ね橋: ユーリク城を取るまで上がっていて誰も渡れない(ロウエン兵も)
   pass: [
-    { tiles:[[52, 14], [53, 14]], open:{ taken:[37, 14] }, text:"ロウエンの国境の跳ね橋。上がっていて渡れない", banner:"国境の跳ね橋が下りた" },
+    { tiles:[[16, 8], [17, 8]], open:{ taken:[32, 23] }, text:"ロウエンの国境の跳ね橋。上がっていて渡れない", banner:"国境の跳ね橋が下りた" },
   ],
   hooks: {
     start: "c0_open",
     win: "c0_win",
     boss: "c0_boss",
     turn: { 3:"c0_t3", 5:"c0_t5" },
-    take: { "37,14":"c0_take" },
-    visit: { "9,4":"c0_v_foot", "27,4":"c0_v_wheat", "13,25":"c0_v_mill", "46,24":"c0_v_ferry" },
+    take: { "32,23":"c0_take" },
+    visit: { "60,4":"c0_v_foot", "42,4":"c0_v_wheat", "56,25":"c0_v_mill", "21,25":"c0_v_ferry" },
     talk: { "cassian>leonidas":"c0_quan", "lucien>leonidas":"c0_azel", "matthias>lucien":"c0_midayle" },
     bossDeath: { bertram:"c0_bertram" },
   },
@@ -1464,72 +1452,72 @@ chapter({
 
 return v; })(), units: (() => { let v; const units = o => { v = o; };
 /* 序章の顔ぶれ。who:"id" はキャラ(characters/ の初期値)。cls・weapon は表の id。
-   西の陣から出て、中ほどのユーリク城(山賊)→ 川向こうのロウエンの国境の城へ。 */
+   東の陣から出て、南西のユーリク城(山賊)→ 川向こうの北西のロウエンの国境の城へ。 */
 units({
-  deploy: [[3, 14], [2, 13], [2, 15], [3, 13], [3, 15], [4, 14], [1, 14], [4, 13], [4, 15], [1, 13], [1, 15]],
+  deploy: [[66, 20], [67, 19], [67, 21], [66, 19], [66, 21], [65, 20], [68, 20], [65, 19], [65, 21], [68, 19], [68, 21]],
   join: [
-    { who:"leonidas", lv:5, x:3, y:14, when:"start" },
-    { who:"godfrey", lv:3, x:2, y:13, when:"start" },
-    { who:"luca", lv:2, x:2, y:15, when:"start" },
-    { who:"gustav", lv:3, x:3, y:13, when:"start" },
-    // 3ターン目: 招待状を届けに来たカシアンとエミル、城を預かっていたヘレナが西の街道から
-    { who:"helena", lv:1, x:0, y:14, when:"turn:3" },
-    { who:"cassian", lv:4, x:0, y:13, when:"turn:3" },
-    { who:"emil", lv:2, x:0, y:15, when:"turn:3" },
+    { who:"leonidas", lv:5, x:66, y:20, when:"start" },
+    { who:"godfrey", lv:3, x:67, y:19, when:"start" },
+    { who:"luca", lv:2, x:67, y:21, when:"start" },
+    { who:"gustav", lv:3, x:66, y:19, when:"start" },
+    // 3ターン目: 招待状を届けに来たカシアンとエミル、城を預かっていたヘレナが東の街道から
+    { who:"helena", lv:1, x:69, y:20, when:"turn:3" },
+    { who:"cassian", lv:4, x:69, y:19, when:"turn:3" },
+    { who:"emil", lv:2, x:69, y:21, when:"turn:3" },
     // 5ターン目: エマを訪ねる途中だったリュシアンと付き添いのブルーノが南の街道から
-    { who:"lucien", lv:2, x:22, y:28, when:"turn:5" },
-    { who:"bruno", lv:4, x:21, y:28, when:"turn:5" },
+    { who:"lucien", lv:2, x:47, y:28, when:"turn:5" },
+    { who:"bruno", lv:4, x:48, y:28, when:"turn:5" },
     // ユーリク城を取ると、城に残っていたマティアスが加わる
-    { who:"matthias", lv:3, x:37, y:15, on:{ taken:[37, 14] } },
+    { who:"matthias", lv:3, x:32, y:22, on:{ taken:[32, 23] } },
   ],
   foes: [
     // 街道の山賊
-    { name:"山賊", cls:"fighter", lv:2, weapon:"iron_axe", x:18, y:13, ai:"charge" },
-    { name:"山賊", cls:"fighter", lv:2, weapon:"iron_axe", x:19, y:15, ai:"charge" },
-    { name:"山賊", cls:"archer", lv:2, weapon:"iron_bow", x:17, y:16, ai:"guard" },
-    { name:"盗賊", cls:"thief", lv:2, weapon:"iron_sword", x:45, y:5, ai:"raider", target:"27,4", gold:300 },   // 東から来る(騎兵なら4ターン目に麦の村へ間に合う)
+    { name:"山賊", cls:"fighter", lv:2, weapon:"iron_axe", x:51, y:19, ai:"charge" },
+    { name:"山賊", cls:"fighter", lv:2, weapon:"iron_axe", x:50, y:21, ai:"charge" },
+    { name:"山賊", cls:"archer", lv:2, weapon:"iron_bow", x:52, y:22, ai:"guard" },
+    { name:"盗賊", cls:"thief", lv:2, weapon:"iron_sword", x:24, y:5, ai:"raider", target:"42,4", gold:300 },   // 西から来る(騎兵なら4ターン目に麦の村へ間に合う)
     // 北と南の見張り砦
-    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:24, y:9, ai:"guard" },
-    { name:"山賊", cls:"archer", lv:2, weapon:"iron_bow", x:23, y:8, ai:"guard" },
-    { name:"山賊", cls:"sword_fighter", lv:3, weapon:"iron_sword", x:28, y:21, ai:"guard" },
-    { name:"山賊", cls:"fighter", lv:2, weapon:"hand_axe", x:27, y:22, ai:"guard" },
+    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:45, y:12, ai:"guard" },
+    { name:"山賊", cls:"archer", lv:2, weapon:"iron_bow", x:46, y:11, ai:"guard" },
+    { name:"山賊", cls:"sword_fighter", lv:3, weapon:"iron_sword", x:44, y:25, ai:"guard" },
+    { name:"山賊", cls:"fighter", lv:2, weapon:"hand_axe", x:44, y:26, ai:"guard" },
     // 城の外
-    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:30, y:13, ai:"guard" },
-    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:30, y:15, ai:"guard" },
-    { name:"山賊", cls:"archer", lv:3, weapon:"iron_bow", x:29, y:14, ai:"guard" },
-    { name:"山賊", cls:"sword_fighter", lv:3, weapon:"iron_sword", x:36, y:20, ai:"guard" },
+    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:39, y:22, ai:"guard" },
+    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:39, y:24, ai:"guard" },
+    { name:"山賊", cls:"archer", lv:3, weapon:"iron_bow", x:40, y:23, ai:"guard" },
+    { name:"山賊", cls:"sword_fighter", lv:3, weapon:"iron_sword", x:33, y:17, ai:"guard" },
     // ユーリク城の中
-    { name:"山賊", cls:"archer", lv:3, weapon:"iron_bow", x:34, y:12, ai:"hold" },
-    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:34, y:16, ai:"hold" },
-    { name:"山賊", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:39, y:12, ai:"hold", gold:300 },
-    { name:"山賊", cls:"archer", lv:4, weapon:"iron_bow", x:39, y:16, ai:"hold" },
-    { name:"山賊", cls:"fighter", lv:3, weapon:"hand_axe", x:36, y:14, ai:"hold" },
-    { who:"zadok", label:"山賊の頭", lv:5, weapon:"iron_axe", x:37, y:14, ai:"hold", boss:true, drop:"steel_axe" },
+    { name:"山賊", cls:"archer", lv:3, weapon:"iron_bow", x:35, y:25, ai:"hold" },
+    { name:"山賊", cls:"fighter", lv:3, weapon:"iron_axe", x:35, y:21, ai:"hold" },
+    { name:"山賊", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:30, y:25, ai:"hold", gold:300 },
+    { name:"山賊", cls:"archer", lv:4, weapon:"iron_bow", x:30, y:21, ai:"hold" },
+    { name:"山賊", cls:"fighter", lv:3, weapon:"hand_axe", x:33, y:23, ai:"hold" },
+    { who:"zadok", label:"山賊の頭", lv:5, weapon:"iron_axe", x:32, y:23, ai:"hold", boss:true, drop:"steel_axe" },
     // 川向こう: ロウエンの見張り
-    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:56, y:6, ai:"hold" },
-    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:56, y:22, ai:"hold" },
-    { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:55, y:13, ai:"guard" },
-    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:55, y:15, ai:"guard" },
+    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:13, y:4, ai:"hold" },
+    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:13, y:16, ai:"hold" },
+    { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:14, y:7, ai:"guard" },
+    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:14, y:9, ai:"guard" },
     // ロウエンの国境の城の中
-    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:61, y:11, ai:"hold" },
-    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:61, y:17, ai:"hold" },
-    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"steel_sword", x:66, y:11, ai:"hold", gold:400 },
-    { name:"ロウエン兵", cls:"lance_knight", lv:5, weapon:"iron_lance", x:66, y:17, ai:"hold" },
-    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:63, y:14, ai:"hold" },
-    { who:"bertram", label:"国境の守将", lv:7, x:65, y:14, ai:"hold", boss:true, drop:"shield_ring" },
+    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:8, y:5, ai:"hold" },
+    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:8, y:11, ai:"hold" },
+    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"steel_sword", x:3, y:5, ai:"hold", gold:400 },
+    { name:"ロウエン兵", cls:"lance_knight", lv:5, weapon:"iron_lance", x:3, y:11, ai:"hold" },
+    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:6, y:8, ai:"hold" },
+    { who:"bertram", label:"国境の守将", lv:7, x:4, y:8, ai:"hold", boss:true, drop:"shield_ring" },
   ],
   reinforce: [
     // 村を狙う山賊
-    { turn:2, foes:[ { name:"略奪兵", cls:"fighter", lv:2, weapon:"iron_axe", x:19, y:1, ai:"raider", target:"9,4" } ] },
-    { turn:3, foes:[ { name:"略奪兵", cls:"thief", lv:2, weapon:"iron_sword", x:16, y:28, ai:"raider", target:"13,25", gold:400 } ] },
-    { turn:5, foes:[ { name:"略奪兵", cls:"fighter", lv:3, weapon:"iron_axe", x:37, y:26, ai:"raider", target:"46,24" } ] },   // 川べりの村は遠いので、遅く・離れた所から出す
+    { turn:2, foes:[ { name:"略奪兵", cls:"fighter", lv:2, weapon:"iron_axe", x:50, y:1, ai:"raider", target:"60,4" } ] },
+    { turn:3, foes:[ { name:"略奪兵", cls:"thief", lv:2, weapon:"iron_sword", x:53, y:28, ai:"raider", target:"56,25", gold:400 } ] },
+    { turn:5, foes:[ { name:"略奪兵", cls:"fighter", lv:3, weapon:"iron_axe", x:26, y:17, ai:"raider", target:"21,25" } ] },   // 川べりの村は遠いので、遅く・離れた所から出す
     // ユーリク城を取ると、ロウエンの城から援軍が出る(跳ね橋も同時に下りる)
-    { on:{ taken:[37, 14] }, text:"ロウエンの城から援軍", foes:[
-      { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:58, y:14, ai:"charge" },
-      { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:57, y:14, ai:"charge" },
-      { name:"ロウエン兵", cls:"bow_rider", lv:4, weapon:"iron_bow", x:57, y:13, ai:"charge" },
-      { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:57, y:15, ai:"charge" },
-      { name:"ロウエン兵", cls:"sword_rider", lv:5, weapon:"iron_sword", x:56, y:14, ai:"charge", gold:300 },
+    { on:{ taken:[32, 23] }, text:"ロウエンの城から援軍", foes:[
+      { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:11, y:8, ai:"charge" },
+      { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:12, y:8, ai:"charge" },
+      { name:"ロウエン兵", cls:"bow_rider", lv:4, weapon:"iron_bow", x:12, y:7, ai:"charge" },
+      { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:12, y:9, ai:"charge" },
+      { name:"ロウエン兵", cls:"sword_rider", lv:5, weapon:"iron_sword", x:13, y:8, ai:"charge", gold:300 },
     ] },
   ],
   arena: [   // 闘技場の相手(1回戦から順に)。本城の中の仲間が戦える
@@ -1539,15 +1527,16 @@ units({
   ],
 });
 
-return v; })(), map: "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWMMMMMMMMMMMMMMMM\n..........MMMMMMMMM.................MMMMMMMMMMM.....WW...FFF...F.F....\n............MMMM.......................MMMMM........WW..FFFFFF.FFFF...\n....................................F.......M.......WW..FFFFFF.FFFF...\n.........V..........RRRRRRRV.......FFF.....MMM......WW...FFFFFFFFFF...\n..................F.R.........F...FFF...............WW..FFFFFFFFFFFF..\n.....M.........F.FFFR........FFF...F...........+....WWFFTFFFFFFF.FFF..\n....MMM.........FF..R.......FFFFF..............R....WWFFFFFFFFF..FFF..\n......F..........F..R........FF.............F..R....WWFFFFFFFF...FFF..\n.....FF.............R...T..................FFF.R....WWFFFFFXXXXXXXXXX.\n....FFFFF...........R....F......XXXXXXXXXXF..FFR....WWFFFFFX........X.\n.......F............R...F.F.....X........X.FFF.R....WW.FFFFX.T....T.X.\n......F..F.......+..R..FF.......X.T....T.X..F..R..F.WW.....X........X.\n........FFF.........R...FFF.....X........X.....R....WW.....X........X.\nRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRGRRRRKRRRGRRRRRRRRRRBBRRRRRGRRRRRK..X.\n...........F..........R.........X........X..........WW.....X........X.\n............F.........R..FFF....X.T....T.X..........WW.....X........X.\n..........FF.F........R.FFFFF...X........X..........WW.....X.T....T.X.\n..........FF..M.......R..FFF....XXXXGXXXXX......M...WW.....X........X.\n.............MMM......R.............R.......FF.MMM..WW.F...XXXXXXXXXX.\n....F.......MMMMM.....R.............R......FFFFFM...WWFFF.............\n....F........MMM......R.....T.......RF..............WWFFFF......FF....\n..FFF.........M...F...R.............R.F......F......WWFFTFFF...FFFFF..\n...F.F...........F....R.............RF..............WWFFFFFF....F.FF..\n..................FFF.R.............RRRRRRRRRRV.....WWF..FF........F..\n.............V........R.....M.......................WW................\n......................R....M.M......................WW................\n......MMM.............R.....M....MMMM...............WW...........FF...\n....MMMMMMMM..........R.......MMMMMMMMMM............WW............F...\nMMMMMMMMMMMMMMMMMMMMMMRMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWMMMMMMMMMMMMMMMM\n", land: "......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwttttttttww\n.................................tttttttt.............wwwwwwttttttttww\n.................................tttttttt.............wwwwwwttttttttww\n.................................tttttttt.............wwwwwwttttttttww\n.................................tttttttt.............wwwwwwttttttttww\n.................................tttttttt.............wwwwwwttttttttww\n.................................tttttttt.............wwwwwwttttttttww\n.................................tttttttt.............wwwwwwttttttttww\n......................................................wwwwwwttttttttww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n......................................................wwwwwwwwwwwwwwww\n", scenes: "# 序章の会話。書き方は engine/FORMAT.md の「会話」。\n\n== c0_open\n- イリオスの王太子が、ザルク信者の反乱を討つため親征に出て、ひと月。\n- アルヴァ家もユーリク家も、当主が主力を連れて従っている。\n  北の城々には、留守の兵しかいない。\n- そこへ、ユーリク家の早馬が駆け込んだ。\nR 早馬[-]: ユーリク城が、山賊に落とされました。城の者は地下に閉じ込められています。\nL leonidas: 賊の数は。\nR 早馬[-]: 百は下りません。それと……騒ぎの中で、ロウエンの兵が礼拝堂に入るのを見た者がいます。\nR luca: ロウエン？　森の国の兵が、なんで山賊と一緒に。\nR godfrey: 一緒とは限らん。騒ぎに乗じただけかもしれん。\nL leonidas: ロウエンの思惑は、あとで確かめればいい。今は城の者を救い出すのが先だ。\nR gustav: 若。城に残る兵は二十。連れて行けるのは、ここの四騎だけですぞ。\nL leonidas: 四騎で足りるよう、私が采配する。グスタフ、遅れるなよ。\nR gustav: 二十年、門の前で待つのが仕事でしたからな。走るのは久しぶりです。\nL leonidas: ヘレナには、留守を頼むと伝えてくれ。……出るぞ。\n\n== c0_t3\n- 西の街道から、三騎が追いついてきた。\nL helena: 兄上！　黙って出ていくなんて。\nL leonidas: ヘレナ。城はどうした。\nL helena: 家令に預けてきました。それに、援軍を連れてきましたよ。\nR cassian: 久しぶりだな、レオニダス。招待状を届けに来たら、主が留守ときた。\nL leonidas: カシアン。……招待状？\nR cassian: 俺とヘレナの式だ。中身は、落ち着いてから読んでくれ。\nR emil: 殿下、まずは目の前の山賊です。\nR cassian: 分かってる、エミル。というわけだ。手を貸すぞ。\nL leonidas: 助かる。ヘレナは後ろに。傷ついた者の手当てを頼む。\nL helena: はい。……兄上、式の返事は、ちゃんとくださいね。\n\n== c0_t5\n- 南の街道から、二人の若者が駆けてきた。\nR lucien: 本当に城が落ちてる……。エマは無事なんだろうか。\nR bruno: 落ち着け、リュシアン。まずは誰が戦ってるか見てからだ。\nR bruno: アルヴァの旗だな。なら話は早い。\nR lucien: ……行こう、ブルーノ。エマに会いに来たんだ。ここで引き返せない。\n\n== c0_boss\nR zadok: アルヴァの若造か。親父の留守に、ご苦労なこった。\nL leonidas: 主の留守に城を掠める。山賊らしい手口だな。\nR zadok: 留守だから入るんだよ。それに、話を持ってきたのは向こうだ。\nL leonidas: 向こう？\nR zadok: 城が騒がしくなれば、それでいいって連中さ。金は前払いでな。\nR zadok: 黒い外套の、妙に丁寧な口をきく奴らだったよ。\nL leonidas: 誰が払ったかは、縄をかけてからゆっくり聞かせてもらおう。\n\n== c0_take\n- ユーリク城の地下から、閉じ込められていた人々が出てきた。\nR matthias: ……アルヴァの方々。かたじけない。\nL leonidas: マティアスだったな。城の者たちは無事か。\nR matthias: 皆、無事です。ですが、エマ様はここにはおられません。\nL leonidas: 連れて行かれたのか。\nR matthias: いえ。ロウエンの兵が、礼拝堂から鷹弓ユーリクを持ち去りました。\n  エマ様はわずかな兵を連れて、それを追われた。\nR matthias: 私には「城の人たちを先に」と。……ですから、ここに残りました。\nR luca: 家宝の弓を、ロウエンが？　山賊と組んでたってことか。\nR matthias: 分かりません。ただ、弓を運ぶ兵は東の国境の城へ逃げ込みました。\n- 東の川のほうで、跳ね橋の鎖が鳴った。\nR godfrey: 若、ロウエンの城から兵が出てきます。\nL leonidas: 向こうから門を開けてくれたか。エマを追う道ができた。マティアス、力を貸してくれるか。\nR matthias: 弓はユーリク家の宝です。エマ様を追うためにも。お供します。\n\n== c0_quan\nR cassian: 騎士学校以来だな。お前と並んで戦うのは。\nL leonidas: あの頃は、どちらが先に旗を取るかで揉めてばかりだった。\nR cassian: 今日は譲ってやる。ヘレナの兄上だからな。\nL leonidas: ……その呼び方には、慣れるまで時間がかかりそうだ。\n\n== c0_azel\nR lucien: イフラの分家の、リュシアンです。エマ様とは、昔から……その。\nL leonidas: エマと知り合いか。\nR lucien: 年に何度か、手紙を。今日も、会いに来る約束でした。\nL leonidas: ならば、その約束は果たさせよう。ただし、前に出すぎるな。\nR lucien: ……はい。\n\n== c0_midayle\nR matthias: リュシアン殿。エマ様から、お噂は。\nR lucien: 噂？　……どんな。\nR matthias: 手紙の字が、きれいだと。\nR lucien: それだけ？\nR matthias: それだけです。\n\n== c0_bertram\nR bertram: ……弓は、もう、王都へ向かった。\nR bertram: 追っても……森が、お前たちを通さん……。\n\n== c0_v_foot\nR 村の長[-]: 山賊は北の山道からも下りてきます。若様、どうかお気をつけて。\n\n== c0_v_wheat\nR 粉ひき[-]: 城の兵隊さんに渡しそびれたものです。使ってくだせえ。\n\n== c0_v_mill\nR 薬師[-]: エマ様に、薬の作り方を教わった者です。\n  あの方、無茶をなさる方だから……どうか、お願いします。\n\n== c0_v_ferry\nR 渡し守[-]: 夜のうちに、布でくるんだ長いものを担いだ兵が、橋を渡っていきました。\n  ロウエンの城の方へ。大事そうに、四人がかりで。\n\n== c0_win\n- ロウエンの国境の城を落とした。\nR matthias: 城の者に聞きました。弓は昨夜のうちに、森の奥へ運ばれたと。\nR matthias: エマ様の一行も、それを追って森へ入られたそうです。\nR cassian: ロウエンは血統のない国だ。弓ひとつで、何をするつもりなんだ。\nR lucien: 弓を持っていれば、イリオスと対等に話せる……そう思ったのかもしれない。\nL leonidas: 理由は、弓を持つ者に問えばいい。エマを一人にはしておけない。\nL leonidas: 森へ入る。支度を急いでくれ。\n" });
+return v; })(), map: "MMMMMMMMMMMMMMMMWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n......F.........WW..F........MMM...F..F................MMM............\n......F.........WW....F.....MMMM..FF............F.......MMM.......F...\n.XXXXXXXXXX...F.WW.......FFF.M......F..................MM..F.F........\n.X........X..T..WW.......FF...M....F......VRRRRRRR......M.F.VFF...F...\n.X.T....T.X.F...WW......FFF.......F..............R..........FF....F...\n.X........X.....WW....F+.FFF.................F...R.....F....FF........\nFX........X.....WW.F......FF........F.F.........FR.......F............\nFX..KRRRRRGRRRRRBBRRRRR..FF..........F.F.F.......R......F...........F.\n.X........X.....WW..F.R.F........F..FFFFF........R........F.F....F...F\n.X........X.....WW..F.R.....F........FFF.....F...R...........F........\n.X.T....T.X.....WWF...R..F..................F....R......FF............\n.X........X..F..WW....R.......FF.............T...R..+....F....F..F...F\n....F...........WW..F.R...F.FFFF.....F...FF......R.....FF.F.....F....F\n..F.......F...F.WW....R......F.F.RRRRRRRRR.......R....FFFF............\n................WWF...R....F.F..FR..M....RFFFF...RF.....FF...F......F.\n.............T..WW...FR..........R..M....R.......R.....F...F.......F..\n.............F..WW..F.R.FF.......R..F....R.......R.F.................F\n................WW....R.....F....R.......R.......R...F................\n....F...........WW....R.F..FXXXXXGXXXX...R.......R....................\n.....F..........WWF...R...F.X........X...RRRRRRRRRRRRRRRRRRRRRRRRRRRRR\n.F..F.F......F..WW.F..R.....X.T....T.X...R.FF..R........FF............\n....FFF.........WW....RF...FX........X...RF.F..R...............F......\n....FFF.........WW.F..RRRRRRGRRRKRRRRGRRRRFF.F.R................F.F...\n............F...WW.........FX........X......F.FR...F.......F...F.F....\nF.......M..FFF..WW...V...F..X.T....T.X.F....T..R........V...F.FFFFF..F\n........M.F.FF..WW..........X........X.....M.MFR............M..F.F....\n........M..FFF..WW..........XXXXXXXXXX....MMMMMR.......F...MM...F..F..\n.......F........WW.....F...F...............M...R............M.FF.....F\nMMMMMMMMMMMMMMMMWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMRMMMMMMMMMMMMMMMMMMMMMM\n", land: "wwwwwwwwwwwwwwww......................................................\nwwwwwwwwwwwwwwww......................................................\nwwwwwwwwwwwwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nwttttttttttwwwww......................................................\nww........wwwwww......................................................\nww........wwwwww......................................................\nww........wwwwww......................................................\nww........wwwwww......................................................\nww........wwwwww......................................................\nww........wwwwww......................................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww............tttttttttt................................\nwwwwwwwwwwwwwwww......................................................\n", scenes: "# 序章の会話。書き方は engine/FORMAT.md の「会話」。\n\n== c0_open\n- イリオスの王太子が、ザルク信者の反乱を討つため親征に出て、ひと月。\n- アルヴァ家もユーリク家も、当主が主力を連れて従っている。\n  北の城々には、留守の兵しかいない。\n- そこへ、ユーリク家の早馬が駆け込んだ。\nR 早馬[-]: ユーリク城が、山賊に落とされました。城の者は地下に閉じ込められています。\nL leonidas: 賊の数は。\nR 早馬[-]: 百は下りません。それと……騒ぎの中で、ロウエンの兵が礼拝堂に入るのを見た者がいます。\nR luca: ロウエン？　森の国の兵が、なんで山賊と一緒に。\nR godfrey: 一緒とは限らん。騒ぎに乗じただけかもしれん。\nL leonidas: ロウエンの思惑は、あとで確かめればいい。今は城の者を救い出すのが先だ。\nR gustav: 若。城に残る兵は二十。連れて行けるのは、ここの四騎だけですぞ。\nL leonidas: 四騎で足りるよう、私が采配する。グスタフ、遅れるなよ。\nR gustav: 二十年、門の前で待つのが仕事でしたからな。走るのは久しぶりです。\nL leonidas: ヘレナには、留守を頼むと伝えてくれ。……出るぞ。\n\n== c0_t3\n- 東の街道から、三騎が追いついてきた。\nL helena: 兄上！　黙って出ていくなんて。\nL leonidas: ヘレナ。城はどうした。\nL helena: 家令に預けてきました。それに、援軍を連れてきましたよ。\nR cassian: 久しぶりだな、レオニダス。招待状を届けに来たら、主が留守ときた。\nL leonidas: カシアン。……招待状？\nR cassian: 俺とヘレナの式だ。中身は、落ち着いてから読んでくれ。\nR emil: 殿下、まずは目の前の山賊です。\nR cassian: 分かってる、エミル。というわけだ。手を貸すぞ。\nL leonidas: 助かる。ヘレナは後ろに。傷ついた者の手当てを頼む。\nL helena: はい。……兄上、式の返事は、ちゃんとくださいね。\n\n== c0_t5\n- 南の街道から、二人の若者が駆けてきた。\nR lucien: 本当に城が落ちてる……。エマは無事なんだろうか。\nR bruno: 落ち着け、リュシアン。まずは誰が戦ってるか見てからだ。\nR bruno: アルヴァの旗だな。なら話は早い。\nR lucien: ……行こう、ブルーノ。エマに会いに来たんだ。ここで引き返せない。\n\n== c0_boss\nR zadok: アルヴァの若造か。親父の留守に、ご苦労なこった。\nL leonidas: 主の留守に城を掠める。山賊らしい手口だな。\nR zadok: 留守だから入るんだよ。それに、話を持ってきたのは向こうだ。\nL leonidas: 向こう？\nR zadok: 城が騒がしくなれば、それでいいって連中さ。金は前払いでな。\nR zadok: 黒い外套の、妙に丁寧な口をきく奴らだったよ。\nL leonidas: 誰が払ったかは、縄をかけてからゆっくり聞かせてもらおう。\n\n== c0_take\n- ユーリク城の地下から、閉じ込められていた人々が出てきた。\nR matthias: ……アルヴァの方々。かたじけない。\nL leonidas: マティアスだったな。城の者たちは無事か。\nR matthias: 皆、無事です。ですが、エマ様はここにはおられません。\nL leonidas: 連れて行かれたのか。\nR matthias: いえ。ロウエンの兵が、礼拝堂から鷹弓ユーリクを持ち去りました。\n  エマ様はわずかな兵を連れて、それを追われた。\nR matthias: 私には「城の人たちを先に」と。……ですから、ここに残りました。\nR luca: 家宝の弓を、ロウエンが？　山賊と組んでたってことか。\nR matthias: 分かりません。ただ、弓を運ぶ兵は西の国境の城へ逃げ込みました。\n- 西の川のほうで、跳ね橋の鎖が鳴った。\nR godfrey: 若、ロウエンの城から兵が出てきます。\nL leonidas: 向こうから門を開けてくれたか。エマを追う道ができた。マティアス、力を貸してくれるか。\nR matthias: 弓はユーリク家の宝です。エマ様を追うためにも。お供します。\n\n== c0_quan\nR cassian: 騎士学校以来だな。お前と並んで戦うのは。\nL leonidas: あの頃は、どちらが先に旗を取るかで揉めてばかりだった。\nR cassian: 今日は譲ってやる。ヘレナの兄上だからな。\nL leonidas: ……その呼び方には、慣れるまで時間がかかりそうだ。\n\n== c0_azel\nR lucien: イフラの分家の、リュシアンです。エマ様とは、昔から……その。\nL leonidas: エマと知り合いか。\nR lucien: 年に何度か、手紙を。今日も、会いに来る約束でした。\nL leonidas: ならば、その約束は果たさせよう。ただし、前に出すぎるな。\nR lucien: ……はい。\n\n== c0_midayle\nR matthias: リュシアン殿。エマ様から、お噂は。\nR lucien: 噂？　……どんな。\nR matthias: 手紙の字が、きれいだと。\nR lucien: それだけ？\nR matthias: それだけです。\n\n== c0_bertram\nR bertram: ……弓は、もう、王都へ向かった。\nR bertram: 追っても……森が、お前たちを通さん……。\n\n== c0_v_foot\nR 村の長[-]: 山賊は北の山道からも下りてきます。若様、どうかお気をつけて。\n\n== c0_v_wheat\nR 粉ひき[-]: 城の兵隊さんに渡しそびれたものです。使ってくだせえ。\n\n== c0_v_mill\nR 薬師[-]: エマ様に、薬の作り方を教わった者です。\n  あの方、無茶をなさる方だから……どうか、お願いします。\n\n== c0_v_ferry\nR 渡し守[-]: 夜のうちに、布でくるんだ長いものを担いだ兵が、橋を渡っていきました。\n  ロウエンの城の方へ。大事そうに、四人がかりで。\n\n== c0_win\n- ロウエンの国境の城を落とした。\nR matthias: 城の者に聞きました。弓は昨夜のうちに、森の奥へ運ばれたと。\nR matthias: エマ様の一行も、それを追って森へ入られたそうです。\nR cassian: ロウエンは血統のない国だ。弓ひとつで、何をするつもりなんだ。\nR lucien: 弓を持っていれば、イリオスと対等に話せる……そう思ったのかもしれない。\nL leonidas: 理由は、弓を持つ者に問えばいい。エマを一人にはしておけない。\nL leonidas: 森へ入る。支度を急いでくれ。\n" });
 RAW.chapters.push({ dir: "chapters/ch01", chapter: (() => { let v; const chapter = o => { v = o; };
 /* 第1章 森の国の弓。序章で取ったロウエンの国境の城(本営)から、森と湖の国の城を三つ落とす。
    地図は map.txt(60x60)、土地の見た目は land.txt、敵と仲間は units.js、会話は scenes.txt。
-   城1 西の森の城 (8,38) と 城2 東の湖畔の城 (50,23) は途中の拠点(holds)。勝ちは城3 宰相の城 (30,4) の制圧。
+   本営は北東 (52,6)。城1 南の森の城 (50,49) と 城2 西の湖畔の城 (8,49) は途中の拠点(holds)。勝ちは城3 宰相の城 (10,14) の制圧。
+   真ん中に大きな湖。湖から西は通れない深い森(地形 D)で、城2から城3へは森の砂時計の道だけ(いちばん細い所は1マス)。
    ・城1を取る: アストリッドが剣を止めて話せるようになる。城2の門が内から開き、エマとニックが追われて出てくる。
-   ・城2を取る: 北の川の跳ね橋 (30,13) が下り、コナルが攻めてくる(エマが話すと仲間に)。
-   ・湖に近づく: セラフィナがベルガの兵に追われる(レオニダスが話すと仲間に)。
-   ・深い森の切り株 (5,18) を、斧を持った人が調べると勇者の斧。 */
+   ・城2を取る: 砂時計の細い所の小川の橋 (10,32) が下り、コナルが攻めてくる(エマが話すと仲間に)。
+   ・レオニダスが細い所を越える: セラフィナがベルガの兵に追われる(レオニダスが話すと仲間に)。
+   ・砂時計の上のふくらみの東の端、湖のほとりの切り株 (19,24) を、斧を持った人が調べると勇者の斧。 */
 chapter({
   no: 1,
   part: 1,
@@ -1555,44 +1544,44 @@ chapter({
   intro: "ロウエンの国境の城を落とした翌朝。\n鷹弓ユーリクを追って、エマは森の奥へ入ったという。\n湖と深い森の国に、城が三つ待っている。",
   devLevel: 5,
   ease: { hp:2, str:1 },
-  base: { at:[30, 55], look:"castle", shop:["iron_sword", "iron_lance", "iron_axe", "iron_bow", "javelin", "hand_axe", "steel_sword", "steel_lance", "fire", "thunder", "wind", "heal_staff"] },
+  base: { at:[52, 6], look:"castle", shop:["iron_sword", "iron_lance", "iron_axe", "iron_bow", "javelin", "hand_axe", "steel_sword", "steel_lance", "fire", "thunder", "wind", "heal_staff"] },
   villages: {
-    "15,51": { name:"樵の村", title:"樵の噂", text:"「湖のほうで、ベルガの紋の兵を見たよ。国境を越えてきた娘を追っているって」", reward:"1000", gold:1000 },
-    "46,51": { name:"水車の村", title:"粉ひきの心づけ", text:"「戦はいやだよ。宰相さまが弓なんか欲しがるから」粉ひきが、薬師の置いていった杖を差し出した。", reward:"ハイヒールの杖", item:"high_heal_staff" },
-    "14,26": { name:"森の村", title:"切り株の話", text:"「森の奥の大きな切り株に、昔の樵の斧が刺さったままでね。斧を扱える者が握れば抜けるって話さ」", reward:"500", gold:500, tip:"ヒント" },   // 勇者の斧の手がかり(訪れる前だけラベル)
+    "6,57": { name:"樵の村", title:"樵の噂", text:"「湖のほうで、ベルガの紋の兵を見たよ。国境を越えてきた娘を追っているって」", reward:"1000", gold:1000 },
+    "44,57": { name:"水車の村", title:"粉ひきの心づけ", text:"「戦はいやだよ。宰相さまが弓なんか欲しがるから」粉ひきが、薬師の置いていった杖を差し出した。", reward:"ハイヒールの杖", item:"high_heal_staff" },
+    "17,45": { name:"森の村", title:"切り株の話", text:"「森の奥の大きな切り株に、昔の樵の斧が刺さったままでね。斧を扱える者が握れば抜けるって話さ」", reward:"500", gold:500, tip:"ヒント" },   // 勇者の斧の手がかり(訪れる前だけラベル)
   },
   holds: {
-    "8,38": { name:"西の森の城", gold:1000, text:"西の森の城のオルフェンの旗を下ろした。" },
-    "50,23": { name:"東の湖畔の城", gold:1000, text:"東の湖畔の城を落とした。" },
+    "50,49": { name:"南の森の城", gold:1000, text:"南の森の城のオルフェンの旗を下ろした。" },
+    "8,49": { name:"西の湖畔の城", gold:1000, text:"西の湖畔の城を落とした。" },
   },
-  goal: { type:"seize", at:[30, 4], text:"レオニダスで北の宰相の城を制圧する", gold:2000 },
+  goal: { type:"seize", at:[10, 14], text:"レオニダスで北西の宰相の城を制圧する", gold:2000 },
   lose: ["leonidas"],
   pass: [
     // 城2の門: 城1を取るまで内から閂がかかっている(ロウエン兵は通れる)。エマとニックが内から開けて逃げてくる
-    { tiles:[[50, 28]], by:{ team:"foe" }, open:{ taken:[8, 38] }, text:"内から閂がかかっている", banner:"門が内から開いた" },
-    // 北の川の跳ね橋: 城2の巻き上げ車で下ろす
-    { tiles:[[30, 13]], to:"bridge", open:{ taken:[50, 23] }, text:"上がったままの跳ね橋。東の湖畔の城から下ろす", banner:"跳ね橋が下りた" },
+    { tiles:[[13, 49]], by:{ team:"foe" }, open:{ taken:[50, 49] }, text:"内から閂がかかっている", banner:"門が内から開いた" },
+    // 砂時計の道の細い所の小川の跳ね橋: 城2の巻き上げ車で下ろす
+    { tiles:[[10, 32]], to:"bridge", open:{ taken:[8, 49] }, text:"上がったままの小さな跳ね橋。西の湖畔の城から下ろす", banner:"跳ね橋が下りた" },
   ],
-  // 印のない場所: 深い森の切り株。斧を持った人が調べると勇者の斧
+  // 印のない場所: 湖のほとりの切り株。斧を持った人が調べると勇者の斧
   spots: {
-    "5,18": { by:{ weapon:"斧" }, scene:"c1_stump", name:"深い森", title:"苔むした切り株", text:"古い斧の柄を握ると、するりと抜けた。", item:"brave_axe" },
+    "19,24": { by:{ weapon:"斧" }, scene:"c1_stump", name:"湖のほとり", title:"苔むした切り株", text:"古い斧の柄を握ると、するりと抜けた。", item:"brave_axe" },
   },
   events: [
     { when:{ turn:1 }, give:{ leonidas:"silver_sword" } },                                   // 使者ヴィクトルの餞別
-    { when:{ near:{ at:[24, 38], r:8 } }, scene:"c1_lake", at:[24, 38], flag:"c1_lake" },    // 湖に近づくとベルガの兵(units.js の増援)
-    { when:{ taken:[8, 38] }, scene:"c1_astrid_stop", set:{ astrid:{ ai:"hold" } } },        // 城1が落ちてアストリッドが剣を止める
-    { when:{ taken:[8, 38] }, scene:"c1_flee", at:[40, 39] },                                // エマとニックが逃げてくる
-    { when:{ taken:[50, 23] }, scene:"c1_conall", at:[30, 11] },                             // コナルが攻めてくる
+    { when:{ near:{ at:[10, 29], r:3, who:"leonidas" } }, scene:"c1_lake", at:[10, 28], flag:"c1_lake" },    // レオニダスが細い所を越えるとベルガの兵(units.js の増援)
+    { when:{ taken:[50, 49] }, scene:"c1_astrid_stop", set:{ astrid:{ ai:"hold" } } },        // 城1が落ちてアストリッドが剣を止める
+    { when:{ taken:[50, 49] }, scene:"c1_flee", at:[27, 56] },                                // エマとニックが逃げてくる
+    { when:{ taken:[8, 49] }, scene:"c1_conall", at:[10, 21] },                             // コナルが攻めてくる
   ],
   hooks: {
     start: "c1_open",
     win: "c1_win",
     boss: { norbert:"c1_boss", radok:"c1_radok", gert:"c1_gert" },
     bossDeath: { norbert:"c1_norbert" },
-    take: { "8,38":"c1_take1", "50,23":"c1_take2" },
-    visit: { "15,51":"c1_v_wood", "46,51":"c1_v_mill", "14,26":"c1_v_forest" },
+    take: { "50,49":"c1_take1", "8,49":"c1_take2" },
+    visit: { "6,57":"c1_v_wood", "44,57":"c1_v_mill", "17,45":"c1_v_forest" },
     talk: {
-      "leonidas>astrid": { scene:"c1_astrid", recruit:true, when:{ taken:[8, 38] } },
+      "leonidas>astrid": { scene:"c1_astrid", recruit:true, when:{ taken:[50, 49] } },
       "leonidas>seraphina": { scene:"c1_seraphina", recruit:true },
       "emma>conall": { scene:"c1_conall_join", recruit:true },
       "bruno>荒くれ頭": "c1_bruno",
@@ -1605,88 +1594,88 @@ chapter({
 
 return v; })(), units: (() => { let v; const units = o => { v = o; };
 /* 第1章の顔ぶれ。who:"id" はキャラ(characters/ の初期値)。cls・weapon は表の id。
-   南の国境の城(本営)から、西の森の城 → 東の湖畔の城 → 川向こうの宰相の城へ。 */
+   北東の国境の城(本営)から、南の森の城 → 西の湖畔の城 → 深い森の砂時計の道を抜けて北西の宰相の城へ。 */
 units({
-  deploy: [[30, 54], [29, 55], [31, 55], [29, 54], [31, 54], [30, 56], [28, 55], [32, 55], [29, 56], [31, 56], [28, 54], [32, 54], [28, 56], [32, 56]],
+  deploy: [[52, 5], [51, 6], [53, 6], [51, 5], [53, 5], [52, 7], [50, 6], [54, 6], [51, 7], [53, 7], [50, 5], [54, 5], [50, 7], [54, 7]],
   join: [
-    // 城1を取ると、城2の門から抜け出していたエマと雇われのニックが、湖の東岸を逃げてくる
-    { who:"emma", lv:3, x:40, y:39, items:["high_heal_staff", "yurik_bow"], on:{ taken:[8, 38] } },
-    { who:"nick", lv:2, x:41, y:39, on:{ taken:[8, 38] } },
+    // 城1を取ると、城2の門から抜け出していたエマと雇われのニックが、湖の南の岸を東へ逃げてくる
+    { who:"emma", lv:3, x:27, y:56, items:["high_heal_staff", "yurik_bow"], on:{ taken:[50, 49] } },
+    { who:"nick", lv:2, x:28, y:56, on:{ taken:[50, 49] } },
   ],
   foes: [
-    // 西の森の城から出てくるオルフェンの王女(倒さずにかわす。城1を取ると剣を止める)
-    { who:"astrid", label:"オルフェンの王女", lv:5, x:14, y:38, ai:"guard" },
-    // 西の森の城の前
-    { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:16, y:40, ai:"guard" },
-    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:18, y:36, ai:"guard" },
-    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:15, y:35, ai:"guard" },
-    // 西の森の城の中
-    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:6, y:36, ai:"hold" },
-    { name:"ロウエン兵", cls:"fighter", lv:4, weapon:"iron_axe", x:10, y:36, ai:"hold" },
-    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:6, y:40, ai:"hold", gold:300 },
-    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:10, y:40, ai:"hold" },
-    { name:"ロウエン兵", cls:"fighter", lv:5, weapon:"hand_axe", x:11, y:38, ai:"hold" },
-    { who:"radok", label:"西の森の城の守将", lv:7, x:8, y:38, ai:"hold", boss:true, drop:"steel_axe" },
-    // 南の街道の見回り
-    { name:"ロウエン兵", cls:"sword_rider", lv:4, weapon:"iron_sword", x:23, y:43, ai:"guard" },
-    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:12, y:46, ai:"guard" },
-    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:40, y:47, ai:"guard" },
-    // 湖のほとりの娘(客。レオニダスが話すと仲間に)
-    { who:"seraphina", lv:3, x:24, y:38, guest:true },
-    // 東の街道
-    { name:"ロウエン兵", cls:"fighter", lv:4, weapon:"iron_axe", x:48, y:42, ai:"guard" },
-    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:45, y:28, ai:"guard" },
-    { name:"ロウエン兵", cls:"bow_rider", lv:5, weapon:"iron_bow", x:52, y:32, ai:"guard" },
-    // 東の湖畔の城の前と中
-    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:49, y:31, ai:"hold" },
-    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:51, y:30, ai:"hold" },
-    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"steel_bow", x:48, y:21, ai:"hold" },
-    { name:"ロウエン兵", cls:"lance_knight", lv:5, weapon:"iron_lance", x:52, y:21, ai:"hold" },
-    { name:"ロウエン兵", cls:"fighter", lv:5, weapon:"iron_axe", x:48, y:25, ai:"hold", gold:400 },
-    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:52, y:25, ai:"hold" },
-    { who:"gert", label:"東の湖畔の城の守将", lv:8, x:50, y:23, ai:"hold", boss:true, drop:"barrier_ring" },
-    // 城2から跳ね橋への道
-    { name:"ロウエン兵", cls:"sword_rider", lv:5, weapon:"iron_sword", x:44, y:20, ai:"guard" },
-    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:38, y:17, ai:"guard" },
-    // 川向こう: 宰相の城の前と中
-    { name:"ロウエン兵", cls:"lance_knight", lv:6, weapon:"iron_lance", x:26, y:11, ai:"guard" },
-    { name:"ロウエン兵", cls:"archer", lv:6, weapon:"iron_bow", x:33, y:11, ai:"guard" },
-    { name:"ロウエン兵", cls:"fighter", lv:5, weapon:"iron_axe", x:12, y:10, ai:"guard" },
-    { name:"ロウエン兵", cls:"bow_rider", lv:5, weapon:"iron_bow", x:48, y:10, ai:"guard" },
-    { name:"ロウエン兵", cls:"mage", lv:6, weapon:"fire", x:26, y:3, ai:"hold" },
-    { name:"ロウエン兵", cls:"archer", lv:6, weapon:"steel_bow", x:34, y:3, ai:"hold" },
-    { name:"ロウエン兵", cls:"guardian", lv:6, weapon:"iron_sword", x:26, y:7, ai:"hold" },
-    { name:"ロウエン兵", cls:"lance_knight", lv:6, weapon:"steel_lance", x:34, y:7, ai:"hold", gold:500 },
-    { name:"ロウエン兵", cls:"sword_fighter", lv:6, weapon:"steel_sword", x:28, y:5, ai:"hold" },
-    { name:"ロウエン兵", cls:"fighter", lv:6, weapon:"steel_axe", x:32, y:5, ai:"hold" },
-    { name:"ロウエン兵", cls:"guardian", lv:6, weapon:"iron_sword", x:30, y:7, ai:"hold" },
-    { who:"norbert", label:"ロウエンの宰相", lv:10, x:30, y:4, ai:"hold", boss:true, drop:"magic_ring" },
+    // 南の森の城から出てくるオルフェンの王女(倒さずにかわす。城1を取ると剣を止める)
+    { who:"astrid", label:"オルフェンの王女", lv:5, x:50, y:43, ai:"guard" },
+    // 南の森の城の前
+    { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:52, y:41, ai:"guard" },
+    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:48, y:39, ai:"guard" },
+    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:47, y:42, ai:"guard" },
+    // 南の森の城の中
+    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:48, y:51, ai:"hold" },
+    { name:"ロウエン兵", cls:"fighter", lv:4, weapon:"iron_axe", x:48, y:47, ai:"hold" },
+    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:52, y:51, ai:"hold", gold:300 },
+    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:52, y:47, ai:"hold" },
+    { name:"ロウエン兵", cls:"fighter", lv:5, weapon:"hand_axe", x:50, y:46, ai:"hold" },
+    { who:"radok", label:"南の森の城の守将", lv:7, x:50, y:49, ai:"hold", boss:true, drop:"steel_axe" },
+    // 湖の南の街道の見回り
+    { name:"ロウエン兵", cls:"sword_rider", lv:4, weapon:"iron_sword", x:30, y:56, ai:"guard" },
+    { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:22, y:52, ai:"guard" },
+    { name:"ロウエン兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:40, y:40, ai:"guard" },
+    // 砂時計の道の娘(客。レオニダスが話すと仲間に)
+    { who:"seraphina", lv:3, x:10, y:28, guest:true },
+    // 本営から南へ下る街道
+    { name:"ロウエン兵", cls:"fighter", lv:4, weapon:"iron_axe", x:55, y:22, ai:"guard" },
+    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:46, y:30, ai:"guard" },
+    { name:"ロウエン兵", cls:"bow_rider", lv:5, weapon:"iron_bow", x:53, y:36, ai:"guard" },
+    // 西の湖畔の城の前と中
+    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:16, y:50, ai:"hold" },
+    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:15, y:48, ai:"hold" },
+    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"steel_bow", x:6, y:51, ai:"hold" },
+    { name:"ロウエン兵", cls:"lance_knight", lv:5, weapon:"iron_lance", x:6, y:47, ai:"hold" },
+    { name:"ロウエン兵", cls:"fighter", lv:5, weapon:"iron_axe", x:10, y:51, ai:"hold", gold:400 },
+    { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:10, y:47, ai:"hold" },
+    { who:"gert", label:"西の湖畔の城の守将", lv:8, x:8, y:49, ai:"hold", boss:true, drop:"barrier_ring" },
+    // 砂時計の道の南の口
+    { name:"ロウエン兵", cls:"sword_rider", lv:5, weapon:"iron_sword", x:10, y:38, ai:"guard" },
+    { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:8, y:41, ai:"guard" },
+    // 深い森の向こう: 宰相の城の前と中
+    { name:"ロウエン兵", cls:"lance_knight", lv:6, weapon:"iron_lance", x:7, y:21, ai:"guard" },
+    { name:"ロウエン兵", cls:"archer", lv:6, weapon:"iron_bow", x:13, y:21, ai:"guard" },
+    { name:"ロウエン兵", cls:"fighter", lv:5, weapon:"iron_axe", x:3, y:20, ai:"guard" },
+    { name:"ロウエン兵", cls:"bow_rider", lv:5, weapon:"iron_bow", x:19, y:13, ai:"guard" },
+    { name:"ロウエン兵", cls:"mage", lv:6, weapon:"fire", x:6, y:13, ai:"hold" },
+    { name:"ロウエン兵", cls:"archer", lv:6, weapon:"steel_bow", x:14, y:13, ai:"hold" },
+    { name:"ロウエン兵", cls:"guardian", lv:6, weapon:"iron_sword", x:6, y:17, ai:"hold" },
+    { name:"ロウエン兵", cls:"lance_knight", lv:6, weapon:"steel_lance", x:14, y:17, ai:"hold", gold:500 },
+    { name:"ロウエン兵", cls:"sword_fighter", lv:6, weapon:"steel_sword", x:8, y:15, ai:"hold" },
+    { name:"ロウエン兵", cls:"fighter", lv:6, weapon:"steel_axe", x:12, y:15, ai:"hold" },
+    { name:"ロウエン兵", cls:"guardian", lv:6, weapon:"iron_sword", x:10, y:17, ai:"hold" },
+    { who:"norbert", label:"ロウエンの宰相", lv:10, x:10, y:14, ai:"hold", boss:true, drop:"magic_ring" },
   ],
   reinforce: [
     // 村を狙う野盗
-    { turn:3, foes:[ { name:"野盗", cls:"fighter", lv:3, weapon:"iron_axe", x:2, y:50, ai:"raider", target:"15,51" } ] },
-    { turn:4, foes:[ { name:"野盗", cls:"thief", lv:3, weapon:"iron_sword", x:58, y:47, ai:"raider", target:"46,51", gold:500 } ] },
-    // 湖に近づくと: セラフィナを追うベルガ家の兵(荒くれ者)。セラフィナを狙い、近くの味方にも斬りかかる
+    { turn:3, foes:[ { name:"野盗", cls:"fighter", lv:3, weapon:"iron_axe", x:19, y:59, ai:"raider", target:"6,57" } ] },
+    { turn:4, foes:[ { name:"野盗", cls:"thief", lv:3, weapon:"iron_sword", x:58, y:58, ai:"raider", target:"44,57", gold:500 } ] },
+    // レオニダスが砂時計の道の細い所を越えると: セラフィナを追うベルガ家の兵(荒くれ者)。セラフィナを狙い、近くの味方にも斬りかかる
     { on:{ flag:"c1_lake" }, text:"ベルガの兵が娘を追っている", foes:[
-      { name:"荒くれ頭", cls:"fighter", label:"ベルガの兵", lv:5, weapon:"steel_axe", x:27, y:40, ai:"hunt", target:"seraphina", gold:500 },
-      { name:"ベルガの兵", cls:"fighter", lv:4, weapon:"iron_axe", x:21, y:40, ai:"hunt", target:"seraphina" },
-      { name:"ベルガの兵", cls:"axe_rider", lv:4, weapon:"iron_axe", x:28, y:37, ai:"hunt", target:"seraphina" },
+      { name:"荒くれ頭", cls:"fighter", label:"ベルガの兵", lv:5, weapon:"steel_axe", x:10, y:24, ai:"hunt", target:"seraphina", gold:500 },
+      { name:"ベルガの兵", cls:"fighter", lv:4, weapon:"iron_axe", x:7, y:25, ai:"hunt", target:"seraphina" },
+      { name:"ベルガの兵", cls:"axe_rider", lv:4, weapon:"iron_axe", x:13, y:25, ai:"hunt", target:"seraphina" },
     ] },
     // 城1を取ると: エマとニックを追って城2から6人(3人ずつ、エマとニックを狙う)
-    { on:{ taken:[8, 38] }, text:"弓を取り返せ！", foes:[
-      { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:50, y:27, ai:"hunt", target:"emma" },
-      { name:"ロウエン兵", cls:"lance_knight", lv:5, weapon:"iron_lance", x:49, y:27, ai:"hunt", target:"emma" },
-      { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:51, y:27, ai:"hunt", target:"emma" },
-      { name:"ロウエン兵", cls:"fighter", lv:4, weapon:"iron_axe", x:48, y:27, ai:"hunt", target:"nick" },
-      { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:52, y:27, ai:"hunt", target:"nick" },
-      { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:50, y:26, ai:"hunt", target:"nick" },
+    { on:{ taken:[50, 49] }, text:"弓を取り返せ！", foes:[
+      { name:"ロウエン兵", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:12, y:49, ai:"hunt", target:"emma" },
+      { name:"ロウエン兵", cls:"lance_knight", lv:5, weapon:"iron_lance", x:12, y:50, ai:"hunt", target:"emma" },
+      { name:"ロウエン兵", cls:"archer", lv:5, weapon:"iron_bow", x:12, y:48, ai:"hunt", target:"emma" },
+      { name:"ロウエン兵", cls:"fighter", lv:4, weapon:"iron_axe", x:12, y:51, ai:"hunt", target:"nick" },
+      { name:"ロウエン兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:12, y:47, ai:"hunt", target:"nick" },
+      { name:"ロウエン兵", cls:"archer", lv:4, weapon:"iron_bow", x:11, y:49, ai:"hunt", target:"nick" },
     ] },
-    // 城2を取ると: 跳ね橋を渡ってコナルの一隊
-    { on:{ taken:[50, 23] }, text:"コナルの一隊が橋を渡ってきた", foes:[
-      { who:"conall", label:"ロウエンの第三王子", lv:6, x:30, y:11, ai:"charge" },
-      { name:"ロウエンの狩人", cls:"archer", lv:5, weapon:"iron_bow", x:29, y:11, ai:"charge" },
-      { name:"ロウエンの狩人", cls:"archer", lv:5, weapon:"iron_bow", x:31, y:11, ai:"charge" },
-      { name:"ロウエンの狩人", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:30, y:10, ai:"charge" },
+    // 城2を取ると: 小川の橋を下ろしてコナルの一隊
+    { on:{ taken:[8, 49] }, text:"コナルの一隊が橋を渡ってきた", foes:[
+      { who:"conall", label:"ロウエンの第三王子", lv:6, x:10, y:21, ai:"charge" },
+      { name:"ロウエンの狩人", cls:"archer", lv:5, weapon:"iron_bow", x:9, y:21, ai:"charge" },
+      { name:"ロウエンの狩人", cls:"archer", lv:5, weapon:"iron_bow", x:11, y:21, ai:"charge" },
+      { name:"ロウエンの狩人", cls:"sword_fighter", lv:5, weapon:"iron_sword", x:10, y:20, ai:"charge" },
     ] },
   ],
   arena: [   // 闘技場の相手(1回戦から順に)。国境の城の中の仲間が戦える
@@ -1697,17 +1686,18 @@ units({
   ],
 });
 
-return v; })(), map: "FMFMFMFMF.F.F.FFF..F..F..............FFF.FFF...FFF.F.F.M.F.F\n.MMMMMMMMF.FFFF.......FXXXXXXXXXXXXXXX.....FFF.F....M.MMMMM.\nMMMMF.MMM.......FFF.F.FX.............X....FF.F.F..F.MMMMMMFM\nM.MMMM.MM.F...F......FFX.............X..F.M..FF.F..MMMMMM.MM\nMMM.MMM.FFF.FFF.....M.FX......K......XFF.M..M.....FMFMM.MM.M\nMF.MM.MFM..FF...F.MFMMMX.............XFFMMM.M.F.F.FMMFM.MFMM\n.M.M.MMFM.....FF..FMMMMX.............X.MMMM..MFFF.FMMFM.MMMM\nMMMM.MMMM...F...FM.MMMMX.............XFFMM.MM.....F.MM..MMMM\n.MM..MMM..F....FFFF..MMX.............XFFMMMMM..FF...MMMMMM.M\n......F.FF......FF.M.F.XXXXXXXGXXXXXXXF...M.F.F...FFM.MFMMMF\n..F.F...F......F..F...F.FF.F..R.F...F...F....F....F..F.MF.F.\nF..FF.FFFF...F.F.......F....F.R...F.F.F....FFFF....FF.FF.F.F\n..F..F.FFF....FF.......F.F..F.R...FF....FFFF...F.....FFFFF..\nWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW\n..F....F..F.FFF...F.FF........R...FF.F.FFF..FFF....F.....F..\n.FFFFFFFFFFFFF.FFF.FFFFF.....FRF.FF.FFF..F....F......F.F.FFF\n.F.F.FFFF.FFFFFFFFFF.F...F...FRFF..F.F........F.FFF....F....\n.FFF.F.FFF..F.FF.FFF.FF...F...RRRRRRRRRRRRRRRF..F.F.....F.FF\n.F.F...FFF..FFFFF..FF......F........F.......RF.F....F......F\n.FFF.F.F.FFF.FFF...F....F.F...F.........F...R.XXXXXXXXXFF...\nFFF..FFFFFFFFFFF.FFF..FF.....F......F.F...F.R.X.......X....F\n.FF....FFFFFFFFFFFFF..F..FF..FFFF..F..F.....R.X.......XF.F.F\n.FF.FFFFFF..FFFFFF.F...F........F..F...F....R.X.......X...F.\n.F.FFFFF..FFFF.F.FF..F....FFF..S.F...FFFF...R.X...K...X.FFF.\n......FFFFFFFF.F...F.....FFSSWWWWWSS.F...F.FR.X.......X.F.FF\nFFFFFF..FF.FF...FF.FF.F.FSWWWWWWWWWWWS.FF.F.RFX.......XF..FF\n...FF..FFF..F.VFFFFF.FF.SWWWWWWWWWWWWWSF..F.R.X.......X...FF\n..FF.F..FFFFFFFF.FFF..FSWWWWWWWWWWWWWWWS....R.X.......X....F\n..F.FFFFFFF.FF.FFFF....SWWWWWWWWWWWWWWWSF...R.XXXXGXXXX.FF..\n.FFFF.FF..FFFFFFFF.FF.SSWWWWWWWWWWWWWWWSS.F.R.....R......FF.\n...FF..FFFFFFF..FFFFF..SWWWWWWWWWWWWWWWSF...RF....R......FFF\nF..F.FF..FFFFFF.FFFFFF.SWWWWWWWWWWWWWWWS....R..F..R.....F..F\nFFFFF...FFF.FFF..FF.F...SWWWWWWWWWWWWWS.F...RRRRRRR..FFFF.FF\nFFFFFFFF.F.F.F.FFF.F.F.FFSWWWWWWWWWWWS.F...F.FR...F...FFF..F\n.F.FXXXXXXXXXX..F.FFF....FFSSWWWWWSS.F.F.F..FFR.F..F.FF..FFF\n..FFX........X.F...F...FF..F..FS...F...F...F..R...F.FFFF.FF.\nFF..X........XF.F..F............FFF......F...FR...F..FF.....\n..F.X........X...F...F.......FFF.....F.....FFFR..F..F..F.F.F\nF..FX...K....GRRRRR.........F.............F...R....FFFM.M.M.\n..F.X........X....R..................FF...F...R..FF..FM.MMM.\nF..FX........X....RFF.FFF....FF.F..FFF.....F..R..FF..M..M.MM\n.F..X........XF.F.R.FF..FFFFF..F.FF.F...F....FR.F.F.F...F.F.\nF..FXXXXXXXXXX.F..RFFFFF.F.....FFF......F...FFR..FFFFFMFFMM.\n..F...F..FF..FFF.FR.F....FF........F....F.F..FR...FF..FFF..F\nF....F.F.F...F....RFF.FFFF..FF..FFF..F...F..F.R.....FFFF..FF\n...F...FF.F....FF.R......FF.F.F..FF.F.F....F..RF....FF...FFF\n........F..F....F.RRRRRRRRRRRRRRRRRRRRRRRRRRRRR.F.F.....F..F\n..F...F.FF.F.FF........F.....FR...F.F..F..FF...FFF.F.F..F...\n..F.F...FF....F....FFF..FF....RF.FFM.MF.FF.F....F.......F...\n.F.......FFF...FF.FF....FFFFF.R...MMMMM....F..FFFFF.F.F...F.\n..F...FF....FF....FF.F.F..F.F.R.F..MFMF.F.......F.F...F...F.\n.FF.....F.FFFF.VF..FFMMFF.F...R..F.F.F...F....VFFF.FF..F.F.F\n..F..FF..F.....F....MMMMMF.F.FRFF.FF....FF..F.F.FF.F.F.F.F.F\n..FM...F...FFFFF....F.MM......R.....F.F..F..FFF...F.F.MMMMM.\n..MMMM......F..F.F....MFF.....R.......F...FFFF....F....MMMMM\n.MMM.MFF.FF.FFF.F..F....F.....K.....F....FF......F...MMMMMMM\nM.M.MMM..FFF.FF..F...F............FFF....FF...FFF....M.MM.MM\nFMMMMM.F.......F..F.F.F...........FFF....F..FF.F.FF.FMMMFMMM\n.MMM.M.F....F.F....F....F....FFF..F.F.....FF.F.F.FF.FM.MMMMM\n.F.M..FF.F...FF.F..F.F...F.FFF...F.....F.FFF..F.F.F...MM..M.\n", land: "............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n.wwwwwwwwwwwwwwwwwww........................................\n.wwwwwwwwwwwwwwwwwww........................................\n.wwwwwwwwwwwwwwwwwww........................................\n.wwwwwwwwwwwwwwwwwww........................................\n.wwwwwwwwwwwwwwwwwww........................................\n.wwwwwwwwwwwwwwwwwww........................................\n.wwwwwwwwwwwwwwwwwww.......mmmmmmmmm........................\n.wwwwwwwwwwwwwwwwwww....mmmmmmmmmmmmmmm.....................\n.wwwwwwwwwwwwwwwwwww..mmmmmmmmm.mmmmmmmmm...................\n.wwwwwwwwwwwwwwwwwww.mmmmmm.........mmmmmm..................\n.wwwwwwwwwwwwwwwwwwwmmmmm.............mmmmm.................\n.wwwwwwwwwwwwwwwwwwwmmmm...............mmmm.................\n.wwwwwwwwwwwwwwwwwwwmmm.................mmmm................\n.wwwwwwwwwwwwwwwwwwwmmm.................mmmm................\n.wwwwwwwwwwwwwwwwwwwmm...................mmm................\n.wwwwwwwwwwwwwwwwwwwmmm.................mmmm................\n.wwwwwwwwwwwwwwwwwwwmmm.................mmmm................\n.wwwwwwwwwwwwwwwwwwwmmmm...............mmmm.................\n.wwwwwwwwwwwwwwwwwwwmmmmm.............mmmmm.................\n.....................mmmmmm.........mmmmmm..................\n......................mmmmmmmmm.mmmmmmmmm...................\n........................mmmmmmmmmmmmmmm.....................\n...........................mmmmmmmmm........................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n", scenes: "# 第1章の会話。書き方は engine/FORMAT.md の「会話」。\n\n== c1_open\n- ロウエンの国境の城。一夜明けて、城門に早馬が着いた。\n- 掲げているのは、イリオス王家の旗だった。\nR victor: アルヴァ家のご子息、レオニダス殿だな。王家の使者として来た。\nL leonidas: ヴィクトル殿。筆頭魔導師が自ら使者とは。\nR victor: 王太子殿下は親征のさなかだ。手の空いた者が来るしかない。\nR victor: 断りなく国境を越えたのは、本来なら咎めを受けることだ。\nL leonidas: 承知の上です。ユーリク家の宝が奪われ、その娘が一人で追っている。\nL leonidas: 北の辺境を預かる家として、座してはいられません。\nR victor: だから咎めない。弓を取り返すのは筋が通っている。王家はこれを追認する。\nR victor: 持っていけ。銀の剣だ。王家の名で渡すが、選んだのは私だ。\nL leonidas: ……ありがたく頂戴します。ですが、なぜそこまで。\nR victor: 国が割れないためだ。北の守りが勝手に動いたと噂が立てば、貴族たちが騒ぐ。\nR victor: 王家が認めたことにしておけば、誰も騒がない。それだけのことだ。\nL leonidas: 理由がどうであれ、お心づかいには感謝します。私は、弓とエマを取り戻すことだけを考えます。\nR victor: ……まっすぐな跡継ぎだ。それでいい。\nR lucien: ……従兄上は、いつもそうだ。理由がきれいすぎる。\nR victor: リュシアン。お前も無茶はするな。イフラの名に傷がつく。\n- 使者は、それ以上は何も言わずに王都へ引き返していった。\nR cassian: 森の奥に城が三つ。弓はどこにあると思う。\nR matthias: 西の森の城に、オルフェンの旗が上がっていると聞きました。\nL leonidas: オルフェン? 敵国の旗が、なぜロウエンの城に。\nR matthias: わかりません。ただ、弓を運んだ兵は東の湖畔の城に入ったと。\nR matthias: 北の宰相の城へは、川の跳ね橋が上がったままです。\n  東の城から鎖を巻いて下ろす仕掛けだとか。\nL leonidas: 西を確かめ、東で弓を取り返す。宰相の城はそのあとだ。\n\n== c1_lake\n- 湖のほとりから、女の悲鳴が聞こえた。\n- 荒くれた兵が、一人の娘を追い詰めている。斧に刻んだ紋は、ベルガ家のものだった。\nR 荒くれ頭[-]: 逃げるなよ。国境を越えてきたザルク信者なんざ、どう扱おうと誰も咎めねえ。\nL leonidas: ベルガの兵が、なぜロウエンの森にいる。\nR bruno: ……親父の兵だ。親征の後ろについて、ザルク信者の狩り出しをしていると聞いた。\nL leonidas: 信者かどうかも確かめず、娘一人を兵が寄ってたかって追う。それは狩りではない。ただの無法だ。\nL leonidas: 自国の兵であろうと、見過ごせば騎士の名折れだ。ベルガ家の当主には、あとで私から話を通す。止めるぞ。\n\n== c1_bruno\nL bruno: 斧を引け。俺はベルガ家の次男、ブルーノだ。\nR 荒くれ頭[-]: はっ、ベルガの若さまがこんな森の奥に? 嘘ならもっとましな嘘をつけ。\nL bruno: この斧の紋を見ろ。\nR 荒くれ頭[-]: 紋入りの斧なんざ、死体からいくらでも拾える。どけ、一緒に斬るぞ。\nL bruno: ……親父の兵は、いつからこうなった。\n\n== c1_seraphina\nL leonidas: 怪我はないか。私はレオニダス。イリオスの、アルヴァ家の者だ。\nR seraphina: ……イリオスの騎士。あの兵たちと、同じ国の。\nL leonidas: そうだ。同じ国の兵だからこそ、止めねばならなかった。名を聞いても?\nR seraphina: セラフィナ。……それ以外は、覚えていません。\nL leonidas: 覚えていない、か。……無理に思い出さなくていい。\nR seraphina: 信じなくてもかまいません。行く所もないので、置いていかれても困りますが。\nL leonidas: ならば、私たちと来るといい。この森に、一人で残していくわけにはいかない。\nR seraphina: ……変わった騎士ですね。\n\n== c1_radok\nR radok: 取引の場を荒らしに来たか、イリオスの犬め。\nL leonidas: 盗品の取引に城を貸した者が、犬を語るか。\n\n== c1_take1\n- 西の森の城の奥の間に、封をした書状が残されていた。\nR cassian: オルフェン王家の印だ。……読むぞ。\nR cassian: 「鷹弓ユーリク、銀五万にて買い取る。受け渡しは西の森の城にて」\nL leonidas: 買い取る、か。盗んだ品を。\nR matthias: ユーリク家が弓を売ったことなど、一度もありません。\nL leonidas: オルフェンの旗は、この取引のためか。……あの剣士にも、これを見せるべきだな。\n\n== c1_astrid_stop\n- 城に上がった旗を見て、剣を振るっていた女剣士が足を止めた。\nR astrid: 城が落ちた……? 受け渡しの使者は、どこへ行った。\n\n== c1_astrid\nL leonidas: 剣を収めてくれ。話がしたい。\nR astrid: オルフェン王国の第二王女、アストリッドだ。盗賊と話すことはない。\nR astrid: 弓を正しく買い取る取引を、お前たちが邪魔した。\nL leonidas: ならば、これを見てほしい。城に残っていた書状だ。\nR astrid: ……オルフェン王家の印。たしかに受け渡しの書状だ。\nL leonidas: 弓はユーリク家の礼拝堂から、山賊の騒ぎに紛れて持ち出されたものだ。\n  ユーリク家は売っていない。その城を、私たちは取り返してきたところだ。\nR astrid: ……私は、正しい取引の護衛だと聞かされて来た。\nR astrid: 盗品の受け取りの手先にされるのは、筋が通らない。\nR astrid: 取引を仕組んだ者を探す。それまで、お前たちと行く。\nL leonidas: オルフェンの王女が、イリオスの騎士と轡を並べると?\nR astrid: 曲がったことをした者は、どこの国の者でも同じだ。\n\n== c1_flee\n- 東の湖畔の城の門が、内側から開いていた。\n- 湖の東の岸を、布にくるんだ長いものを抱えた娘と、身軽な少年が駆けてくる。\nR emma: ニック、走って! 西の城が落ちたなら、味方が来ているはずよ!\nR nick: 閂を外したのは俺だからね。礼はあとでたっぷり払ってもらうよ!\nR ロウエン兵[-]: 弓を盗んだ女と、閂を外した小僧だ! 二人とも逃がすな!\nR matthias: エマ様……! 若様、あれはエマ様です!\nL leonidas: 迎えに行く。追手を一人も近づけるな。\n\n== c1_matthias\nL matthias: エマ様、お一人で敵の城に……!\nR emma: 一人じゃないわ。ニックを雇ったの。弓は取り返した、ほら。\nL matthias: ……寿命が縮みました。\nR emma: 縮んだぶんは、私が薬で戻してあげる。\n\n== c1_emma\nL emma: レオニダス様まで来てくださったの? 国境を越えて?\nR leonidas: 王家の追認も得ている。弓は、君が持っていてくれ。\nL emma: ……ありがとう。父が戻ったら、何て言うかしら。\nR leonidas: 叱られるのは私のほうだ。君は立派に弓を取り返した。\n\n== c1_gert\nR gert: 弓を持ち出されたうえに、城まで取られては、宰相どのに顔向けできん。\nL leonidas: 顔向けできぬことを先にしたのは、そちらのほうだろう。\n\n== c1_take2\n- 東の湖畔の城を落とした。城の奥で、跳ね橋の鎖を巻く大きな車輪が見つかった。\nR nick: これを回せば、北の川の跳ね橋が下りる。宰相の城へ行けるよ。\nL leonidas: 弓の取引を受けたのは、宰相か。\nR emma: ええ。城の兵が話していたわ。宰相様がオルフェンの使者と話をつけたって。\n\n== c1_conall\n- 下りた跳ね橋を渡って、狩人の装いの一隊が駆けてきた。\nR conall: ……兄上たちの命令だ。弓を取り返しに来た者を、追い払えと。\nR conall: こんなやり方で、ロウエンが強くなるものか。\nR emma: あの人……城で、弓を奪うのに反対していた方だわ。\n\n== c1_conall_join\nL emma: コナル様! 私です、城から弓を持ち出した……。\nR conall: ……ユーリクの娘か。弓は、取り戻したんだな。\nL emma: ええ。だからもう、あなたが戦う理由はないはずよ。\nR conall: 兄上たちは宰相に言いくるめられている。俺には止められなかった。\nL emma: なら、一緒に止めに行きましょう。宰相の城まで。\nR conall: 弓が持ち主に返るなら、それでいい。ロウエンの恥は、ロウエンの者が拭う。\n\n== c1_lucien\nL lucien: レオニダス。従兄上の言葉、真に受けないほうがいい。\nR leonidas: 銀の剣のことか。\nL lucien: あの人は、得になると決めた相手にしか物を渡さない。\nR leonidas: 従兄上にどんな思惑があっても、この剣は弓を取り戻す助けになる。\nR leonidas: 疑うより、恥じない使い方をしよう。それが、剣をくれた人への礼だ。\n\n== c1_stump\n- 深い森の奥。苔むした大きな切り株に、古い斧が深く食い込んでいる。\n- 斧の扱いを知る者が柄を握ると、するりと抜けた。刃は少しも錆びていない。\n\n== c1_boss\nR norbert: アルヴァの若造か。弓ひとつで、ずいぶん遠くまで来たものだ。\nL leonidas: 弓を売る相手まで用意するとは、手回しのいいことだ。誰の入れ知恵だ。\nR norbert: ロウエンを軽んじてきた者に、教える義理はない。\n\n== c1_norbert\nR norbert: ……弓は、いずれ然るべき所へ還る……。\nR norbert: あの男は、そう言った……ロウエンのためだと……。\n\n== c1_v_wood\nR 樵[-]: 湖のほうで、ベルガの紋の兵を見たよ。国境を越えてきた娘を追っているって。\n\n== c1_v_mill\nR 粉ひき[-]: 戦はいやだよ。宰相さまが、弓なんか欲しがるから。\n  薬師の置いていった杖だ。あんたたちのほうが、役に立てられるだろう。\n\n== c1_v_forest\nR 森の老人[-]: 森の奥の大きな切り株に、昔の樵の斧が刺さったままでね。\n  斧を扱える者が握れば抜けるって話さ。北西の、いちばん深いところだよ。\n\n== c1_win\n- 北の宰相の城を落とした。\nR conall: 宰相に弓の話を持ちかけたのは、黒い外套の男だ。何度か城に来ていた。\nR astrid: 受け渡しの書状を持ってきた使者も、黒い外套だった。\nR matthias: 山賊の頭も、黒い外套の連中に雇われたと言っていました。\n- 宰相の机の奥から、黒い封蝋の手紙が見つかった。封蝋には、欠けた円の紋が押されていた。\nR cassian: ……ザルク帝国の紋だ。歴史の書でしか見たことがない。\nL leonidas: ザルク信者か。王太子殿下が討ちに行った反乱も、信者たちだったな。\nR lucien: 弓がロウエンに残っても、オルフェンに渡っても、イリオスとの間に火種が残る。\nR lucien: 狙いは弓そのものじゃなくて、国どうしを争わせることなのかもしれない。\nL leonidas: 北の城が空になったのも、奴らの仕組みのうちか。\nR emma: 弓は戻ったわ。でも、これで終わりじゃない気がする。\nL leonidas: 弓をユーリク家に返す。それから、信者たちの狙いを確かめよう。\n- ザルクの名が出たとき、セラフィナは小さく息をのんだ。誰も、それに気づかなかった。\n" });
+return v; })(), map: "DDDDDDDDDDDDDDDDDDDDDDDDDDF................F......FF....F...\nDDDDDDDDDDDDDDDDDDDDDDDDDD..F.F....FF.........FF...F..F....F\nDDDDDDDDDDDDDDDDDDDDDDDDDD....W.FFF...F.....F...............\nDDDDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWF.FF.F..F...............\nDDDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWFFFFFFFF...............\nDDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWF.FF..F...............\nDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWWW.FF..........R......F\nDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWWWFF.F...FF....R.......\nDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWWWWW.F..........R.....F.\nDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWWWWWFF.F........R.......\nDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWWWWW........F.FFR....FF.\nF..XXXXXXXXXXXXXXX...WWWWWWWWWWWWWWWWWWW.....F..FF..R.F.....\n...X.............X..WWWWWWWWWWWWWWWWWWWWW..FFFFF....RRRR....\n...X.............XF.WWWWWWWWWWWWWWWWWWWWW..FFF.......F.R..F.\n..FX......K......X..WWWWWWWWWWWWWWWWWWWWWFFFFFF...F.FF.R....\n...X.............X..WWWWWWWWWWWWWWWWWWWWW...FFF.F......R..F.\n...X.............X.FWWWWWWWWWWWWWWWWWWWWW..FFF.........R....\n...X.............X..WWWWWWWWWWWWWWWWWWWWWFF......F...F.R.F..\nF.FX.............X.FWWWWWWWWWWWWWWWWWWWWW...F.....F..F.R...F\n...XXXXXXXGXXXXXXX..WWWWWWWWWWWWWWWWWWWWW...F.F.....F.FRF...\nF..F.F...FR.F..F...FWWWWWWWWWWWWWWWWWWWWW.......F.F.FFFR....\n.F.F...FF.R....F....WWWWWWWWWWWWWWWWWWWWW...FF........FRF...\nDDFFFFFFFFFFFFFFFFFDWWWWWWWWWWWWWWWWWWWWW...F.....F....R....\nDDFFFFFFFFFFFFFFFFFDWWWWWWWWWWWWWWWWWWWWW........F.FFFFRF...\nDDFFFFFFFFFFFFFFFFF.WWWWWWWWWWWWWWWWWWWWWF...F.F.......R....\nDDFFFFFFFFFFFFFFFFFDWWWWWWWWWWWWWWWWWWWWW....FFFFF....FR.F..\nDDDDFFFFFFFFFFFFFDDDWWWWWWWWWWWWWWWWWWWWW...F...F...F..R....\nDDDDFFFFFFFFFFFFFDDDWWWWWWWWWWWWWWWWWWWWW..........F...RF..F\nDDDDDDFFFFFFFFFDDDDDWWWWWWWWWWWWWWWWWWWWW.FF..FF...F...RFFF.\nDDDDDDFFFFFFFFFDDDDDWWWWWWWWWWWWWWWWWWWWW.F.......F....RFF..\nDDDDDDDDFFFFFDDDDDDDWWWWWWWWWWWWWWWWWWWWWRRRRRRRRRRRRRRRFFF.\nDDDDDDDDFFFFFDDDDDDDWWWWWWWWWWWWWWWWWWWWW.F.F....FR....FFF.F\nWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWF.....F..R...FFFFF.\nDDDDDDDDDDFDDDDDDDDDDWWWWWWWWWWWWWWWWWWWR.......F.R.....F...\nDDDDDDDDFFFFFDDDDDDDDWWWWWWWWWWWWWWWWWWWR....F....R.....F...\nDDDDDDDDFFFFFDDDDDDDDWWWWWWWWWWWWWWWWWWWRF....F...R.....F...\nDDDDDDFFFFFFFFFDDDDDDWWWWWWWWWWWWWWWWWWWR.......F.R.....F..F\nDDDDDDFFFFFFFFFDDDDDDDWWWWWWWWWWWWWWWWW.RF..FF.F.FR......F.F\nDDDDFFFFFFFFFFFFFDDDDDWWWWWWWWWWWWWWWWW.R.........R..F...F..\nDDDDFFFFFFFFFFFFFDDDDDDWWWWWWWWWWWWWWW..R.FF......R..F....F.\nDDFFFFFFFFFFFFFFFFFDDDDDWWWWWWWWWWWWW...R.........R.....F...\nDDFFFFFFFFFFFFFFFFFDDDDDDWWWWWWWWWWW....R..F...FF.R.F....F..\nDDFFFFFFFFFFFFFFFFFDDDDDDDDDDDW.........R.........R....FFFFF\nDDFFFFFFFFRFFFFFFFFDDDDDDDDDDD....F.....RF........R......FFF\n..F....FFFRRRRRRRRRRR..F..........F.....R.F..FXXXXGXXXXFFFFF\n....XXXXXXXXXX...V..RF...F....F.........R....FX.......X.FFF.\n....X........X.FF..FR.....F.F.FFF...F..FR....FX.......XFFF..\n...FX........X......RF......FFFFF...FF..RF..F.X.......XF....\n..F.X........X.FF.FFR.FF..FFFFFFFF.F....RF....X.......X...F.\n....X...K....GRRRRRRR.F.....FF.F..FFF...RF....X...K...XF..F.\nFF.FX........X...F.FRFFF.F..FFFF.....FF.R.F...X.......X.....\n....X........X....FFR.FF..F.F.FF..F.FFFFR.FF..X.......X...F.\nF...X........X.FFF..R..F..F........FFFF.R.....X.......XFF..F\n....XXXXXXXXXX.FFF..R...F.......F.F.FFFFR.....XXXXXXXXX...FF\nFF..........F.F.F...R..FF.FFFF..F...FF.FR..FFF....F.........\n.....FF..FF...F...F.R.FFFF...FF.......F.R....F.F.F....F...F.\n...FFF....FF.....F..RRRRRRRRRRRRRRRRRRRRR............F....F.\n..FFF.V...F.....F..F..FFFF..F...F...........V.....FFF..F....\n.F.FFFF.......F.F......FFFF..FF..........F....F...FF........\nF..FFF.F.F.........F.....F..........F......F..F.....F..F....\n", land: "wwwwwwwwwwwwwwwwwwwwwwwwww..mmmmm...........................\nwwwwwwwwwwwwwwwwwwwwwwwwwwmmmmmmmmmmmm......................\nwwwwwwwwwwwwwwwwwwwwwwwwwwmmmm.mmmmmmmm.....................\nwwwwwwwwwwwwwwwwwwwwwwwww...........mmmm....................\nwwwwwwwwwwwwwwwwwwwwwwww.............mmmm...................\nwwwwwwwwwwwwwwwwwwwwwww...............mmm...................\nwwwwwwwwwwwwwwwwwwwwww.................mmm..................\nwwwwwwwwwwwwwwwwwwwwww.................mmm..................\nwwwwwwwwwwwwwwwwwwwww...................mm..................\nwwwwwwwwwwwwwwwwwwwww...................mm..................\nwwwwwwwwwwwwwwwwwwwww...................mmm.................\n..................mmm...................mmm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\n..................mm.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\nwwwwwwwwwwwwwwwwwwww.....................mm.................\n.........................................mm.................\nwwwwwwwwwwwwwwwwwwwww...................mmm.................\nwwwwwwwwwwwwwwwwwwwww...................mmm.................\nwwwwwwwwwwwwwwwwwwwww...................mm..................\nwwwwwwwwwwwwwwwwwwwww...................mm..................\nwwwwwwwwwwwwwwwwwwwwww.................mmm..................\nwwwwwwwwwwwwwwwwwwwwww.................mmm..................\nwwwwwwwwwwwwwwwwwwwwwww...............mmm...................\nwwwwwwwwwwwwwwwwwwwwwwww.............mmmm...................\nwwwwwwwwwwwwwwwwwwwwwwwww...........mmmm....................\nwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.mmmmmmmm.....................\nwwwwwwwwww.wwwwwwwwwwwwwwwwwwwmmmmmmmm......................\n............................mmmmm...........................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n", scenes: "# 第1章の会話。書き方は engine/FORMAT.md の「会話」。\n\n== c1_open\n- ロウエンの国境の城。一夜明けて、城門に早馬が着いた。\n- 掲げているのは、イリオス王家の旗だった。\nR victor: アルヴァ家のご子息、レオニダス殿だな。王家の使者として来た。\nL leonidas: ヴィクトル殿。筆頭魔導師が自ら使者とは。\nR victor: 王太子殿下は親征のさなかだ。手の空いた者が来るしかない。\nR victor: 断りなく国境を越えたのは、本来なら咎めを受けることだ。\nL leonidas: 承知の上です。ユーリク家の宝が奪われ、その娘が一人で追っている。\nL leonidas: 北の辺境を預かる家として、座してはいられません。\nR victor: だから咎めない。弓を取り返すのは筋が通っている。王家はこれを追認する。\nR victor: 持っていけ。銀の剣だ。王家の名で渡すが、選んだのは私だ。\nL leonidas: ……ありがたく頂戴します。ですが、なぜそこまで。\nR victor: 国が割れないためだ。北の守りが勝手に動いたと噂が立てば、貴族たちが騒ぐ。\nR victor: 王家が認めたことにしておけば、誰も騒がない。それだけのことだ。\nL leonidas: 理由がどうであれ、お心づかいには感謝します。私は、弓とエマを取り戻すことだけを考えます。\nR victor: ……まっすぐな跡継ぎだ。それでいい。\nR lucien: ……従兄上は、いつもそうだ。理由がきれいすぎる。\nR victor: リュシアン。お前も無茶はするな。イフラの名に傷がつく。\n- 使者は、それ以上は何も言わずに王都へ引き返していった。\nR cassian: 森の奥に城が三つ。弓はどこにあると思う。\nR matthias: 南の森の城に、オルフェンの旗が上がっていると聞きました。\nL leonidas: オルフェン? 敵国の旗が、なぜロウエンの城に。\nR matthias: わかりません。ただ、弓を運んだ兵は西の湖畔の城に入ったと。\nR matthias: 北西の宰相の城へは、深い森を抜ける細い道が一本あるだけです。\n  道の小川の跳ね橋が上がったままで、西の城から鎖を巻いて下ろす仕掛けだとか。\nL leonidas: 南を確かめ、西で弓を取り返す。宰相の城はそのあとだ。\n\n== c1_lake\n- 森の細い道の先から、女の悲鳴が聞こえた。\n- 荒くれた兵が、一人の娘を追い詰めている。斧に刻んだ紋は、ベルガ家のものだった。\nR 荒くれ頭[-]: 逃げるなよ。国境を越えてきたザルク信者なんざ、どう扱おうと誰も咎めねえ。\nL leonidas: ベルガの兵が、なぜロウエンの森にいる。\nR bruno: ……親父の兵だ。親征の後ろについて、ザルク信者の狩り出しをしていると聞いた。\nL leonidas: 信者かどうかも確かめず、娘一人を兵が寄ってたかって追う。それは狩りではない。ただの無法だ。\nL leonidas: 自国の兵であろうと、見過ごせば騎士の名折れだ。ベルガ家の当主には、あとで私から話を通す。止めるぞ。\n\n== c1_bruno\nL bruno: 斧を引け。俺はベルガ家の次男、ブルーノだ。\nR 荒くれ頭[-]: はっ、ベルガの若さまがこんな森の奥に? 嘘ならもっとましな嘘をつけ。\nL bruno: この斧の紋を見ろ。\nR 荒くれ頭[-]: 紋入りの斧なんざ、死体からいくらでも拾える。どけ、一緒に斬るぞ。\nL bruno: ……親父の兵は、いつからこうなった。\n\n== c1_seraphina\nL leonidas: 怪我はないか。私はレオニダス。イリオスの、アルヴァ家の者だ。\nR seraphina: ……イリオスの騎士。あの兵たちと、同じ国の。\nL leonidas: そうだ。同じ国の兵だからこそ、止めねばならなかった。名を聞いても?\nR seraphina: セラフィナ。……それ以外は、覚えていません。\nL leonidas: 覚えていない、か。……無理に思い出さなくていい。\nR seraphina: 信じなくてもかまいません。行く所もないので、置いていかれても困りますが。\nL leonidas: ならば、私たちと来るといい。この森に、一人で残していくわけにはいかない。\nR seraphina: ……変わった騎士ですね。\n\n== c1_radok\nR radok: 取引の場を荒らしに来たか、イリオスの犬め。\nL leonidas: 盗品の取引に城を貸した者が、犬を語るか。\n\n== c1_take1\n- 南の森の城の奥の間に、封をした書状が残されていた。\nR cassian: オルフェン王家の印だ。……読むぞ。\nR cassian: 「鷹弓ユーリク、銀五万にて買い取る。受け渡しは南の森の城にて」\nL leonidas: 買い取る、か。盗んだ品を。\nR matthias: ユーリク家が弓を売ったことなど、一度もありません。\nL leonidas: オルフェンの旗は、この取引のためか。……あの剣士にも、これを見せるべきだな。\n\n== c1_astrid_stop\n- 城に上がった旗を見て、剣を振るっていた女剣士が足を止めた。\nR astrid: 城が落ちた……? 受け渡しの使者は、どこへ行った。\n\n== c1_astrid\nL leonidas: 剣を収めてくれ。話がしたい。\nR astrid: オルフェン王国の第二王女、アストリッドだ。盗賊と話すことはない。\nR astrid: 弓を正しく買い取る取引を、お前たちが邪魔した。\nL leonidas: ならば、これを見てほしい。城に残っていた書状だ。\nR astrid: ……オルフェン王家の印。たしかに受け渡しの書状だ。\nL leonidas: 弓はユーリク家の礼拝堂から、山賊の騒ぎに紛れて持ち出されたものだ。\n  ユーリク家は売っていない。その城を、私たちは取り返してきたところだ。\nR astrid: ……私は、正しい取引の護衛だと聞かされて来た。\nR astrid: 盗品の受け取りの手先にされるのは、筋が通らない。\nR astrid: 取引を仕組んだ者を探す。それまで、お前たちと行く。\nL leonidas: オルフェンの王女が、イリオスの騎士と轡を並べると?\nR astrid: 曲がったことをした者は、どこの国の者でも同じだ。\n\n== c1_flee\n- 西の湖畔の城の門が、内側から開いていた。\n- 湖の南の岸を、布にくるんだ長いものを抱えた娘と、身軽な少年が駆けてくる。\nR emma: ニック、走って! 南の城が落ちたなら、味方が来ているはずよ!\nR nick: 閂を外したのは俺だからね。礼はあとでたっぷり払ってもらうよ!\nR ロウエン兵[-]: 弓を盗んだ女と、閂を外した小僧だ! 二人とも逃がすな!\nR matthias: エマ様……! 若様、あれはエマ様です!\nL leonidas: 迎えに行く。追手を一人も近づけるな。\n\n== c1_matthias\nL matthias: エマ様、お一人で敵の城に……!\nR emma: 一人じゃないわ。ニックを雇ったの。弓は取り返した、ほら。\nL matthias: ……寿命が縮みました。\nR emma: 縮んだぶんは、私が薬で戻してあげる。\n\n== c1_emma\nL emma: レオニダス様まで来てくださったの? 国境を越えて?\nR leonidas: 王家の追認も得ている。弓は、君が持っていてくれ。\nL emma: ……ありがとう。父が戻ったら、何て言うかしら。\nR leonidas: 叱られるのは私のほうだ。君は立派に弓を取り返した。\n\n== c1_gert\nR gert: 弓を持ち出されたうえに、城まで取られては、宰相どのに顔向けできん。\nL leonidas: 顔向けできぬことを先にしたのは、そちらのほうだろう。\n\n== c1_take2\n- 西の湖畔の城を落とした。城の奥で、跳ね橋の鎖を巻く大きな車輪が見つかった。\nR nick: これを回せば、森の細い道の跳ね橋が下りる。宰相の城へ行けるよ。\nL leonidas: 弓の取引を受けたのは、宰相か。\nR emma: ええ。城の兵が話していたわ。宰相様がオルフェンの使者と話をつけたって。\n\n== c1_conall\n- 下りた跳ね橋を渡って、狩人の装いの一隊が駆けてきた。\nR conall: ……兄上たちの命令だ。弓を取り返しに来た者を、追い払えと。\nR conall: こんなやり方で、ロウエンが強くなるものか。\nR emma: あの人……城で、弓を奪うのに反対していた方だわ。\n\n== c1_conall_join\nL emma: コナル様! 私です、城から弓を持ち出した……。\nR conall: ……ユーリクの娘か。弓は、取り戻したんだな。\nL emma: ええ。だからもう、あなたが戦う理由はないはずよ。\nR conall: 兄上たちは宰相に言いくるめられている。俺には止められなかった。\nL emma: なら、一緒に止めに行きましょう。宰相の城まで。\nR conall: 弓が持ち主に返るなら、それでいい。ロウエンの恥は、ロウエンの者が拭う。\n\n== c1_lucien\nL lucien: レオニダス。従兄上の言葉、真に受けないほうがいい。\nR leonidas: 銀の剣のことか。\nL lucien: あの人は、得になると決めた相手にしか物を渡さない。\nR leonidas: 従兄上にどんな思惑があっても、この剣は弓を取り戻す助けになる。\nR leonidas: 疑うより、恥じない使い方をしよう。それが、剣をくれた人への礼だ。\n\n== c1_stump\n- 湖のほとり、森の道の脇。苔むした大きな切り株に、古い斧が深く食い込んでいる。\n- 斧の扱いを知る者が柄を握ると、するりと抜けた。刃は少しも錆びていない。\n\n== c1_boss\nR norbert: アルヴァの若造か。弓ひとつで、ずいぶん遠くまで来たものだ。\nL leonidas: 弓を売る相手まで用意するとは、手回しのいいことだ。誰の入れ知恵だ。\nR norbert: ロウエンを軽んじてきた者に、教える義理はない。\n\n== c1_norbert\nR norbert: ……弓は、いずれ然るべき所へ還る……。\nR norbert: あの男は、そう言った……ロウエンのためだと……。\n\n== c1_v_wood\nR 樵[-]: 湖の西の森で、ベルガの紋の兵を見たよ。国境を越えてきた娘を追っているって。\n\n== c1_v_mill\nR 粉ひき[-]: 戦はいやだよ。宰相さまが、弓なんか欲しがるから。\n  薬師の置いていった杖だ。あんたたちのほうが、役に立てられるだろう。\n\n== c1_v_forest\nR 森の老人[-]: 湖のほとりの大きな切り株に、昔の樵の斧が刺さったままでね。\n  斧を扱える者が握れば抜けるって話さ。北への森の道が、湖にいちばん近づくところだよ。\n\n== c1_win\n- 北西の宰相の城を落とした。\nR conall: 宰相に弓の話を持ちかけたのは、黒い外套の男だ。何度か城に来ていた。\nR astrid: 受け渡しの書状を持ってきた使者も、黒い外套だった。\nR matthias: 山賊の頭も、黒い外套の連中に雇われたと言っていました。\n- 宰相の机の奥から、黒い封蝋の手紙が見つかった。封蝋には、欠けた円の紋が押されていた。\nR cassian: ……ザルク帝国の紋だ。歴史の書でしか見たことがない。\nL leonidas: ザルク信者か。王太子殿下が討ちに行った反乱も、信者たちだったな。\nR lucien: 弓がロウエンに残っても、オルフェンに渡っても、イリオスとの間に火種が残る。\nR lucien: 狙いは弓そのものじゃなくて、国どうしを争わせることなのかもしれない。\nL leonidas: 北の城が空になったのも、奴らの仕組みのうちか。\nR emma: 弓は戻ったわ。でも、これで終わりじゃない気がする。\nL leonidas: 弓をユーリク家に返す。それから、信者たちの狙いを確かめよう。\n- ザルクの名が出たとき、セラフィナは小さく息をのんだ。誰も、それに気づかなかった。\n" });
 RAW.chapters.push({ dir: "chapters/ch02", chapter: (() => { let v; const chapter = o => { v = o; };
 /* 第2章 夜剣の城。ロウエンの国境の城(本営)から、ロウエンを越えた先のゼーレン王国へ。
    地図は map.txt(60x60)、敵と同盟と仲間は units.js、会話は scenes.txt。
-   城は6つ: 本営 (3,30)・ノクス城(同盟)(16,30)・ヘルマンの城 (30,30)・ローデリヒの城(北)(30,7)・クラウスの城(南)(30,52)・ゼーレン城 (57,30)。
+   南の8行は第1章の北の8行と同じ地形(本営・湖・北西の深い森がつながる)。真ん中は崖に囲まれた村々の盆地で、入り口は北西だけ。
+   城は6つ: 本営 (52,58)・ノクス城(同盟)(26,48)・ヘルマンの城 (7,36)・ローデリヒの城(北)(13,8)・クラウスの城(北東)(43,30)・ゼーレン城 (43,6)。
    ・ノクス城: ヴィオラとロイヤルナイト3人(同盟軍)がヘルマンの兵に囲まれている。急がないとヴィオラが討たれる(時間切れの仕組みは使わず、配置と強さで)。
-   ・ヘルマンの城を取る: ロイヤルナイト3人が生きていればヴィオラに騎士の指輪。北と南から討伐軍、南の村に山賊に化けた兵、居合わせたフェリクスとルゥ(同盟軍)。
+   ・ヘルマンの城を取る: ロイヤルナイト3人が生きていればヴィオラに騎士の指輪。北と北東から討伐軍、盆地の村に山賊に化けた兵、居合わせたフェリクスとルゥ(同盟軍)。
    ・ローデリヒの城を取る: クラウスの城から傭兵隊と騎士団(ヴァイスはレオニダスが話して3000払うと仲間に)。
    ・クラウスの城を取る: ゼーレン城から天騎士団(隊長ミルカ。フェリクスが話すと仲間に、残りの天騎士は同盟軍に)とゼーレン騎士団。
-   ・東の川の橋 (49,30) はローデリヒとクラウスが倒れると下りる。その先の砦にジークムント。勝ちはゼーレン城の制圧(新王オスヴァルトは倒れても死なない)。
-   ・湖の岬 (39,31) を、グスタフが調べると追撃リング。 */
+   ・ゼーレン城の前の川の橋 (43,17) はローデリヒとクラウスが倒れると下りる。勝ちはゼーレン城の制圧(新王オスヴァルトは倒れても死なない)。
+   ・南の湖のほとりの岬 (30,53) を、グスタフが調べると追撃リング。 */
 chapter({
   no: 2,
   part: 1,
@@ -1715,45 +1705,45 @@ chapter({
   intro: "ロウエンがアルヴァ家の手に落ち、ゼーレン王国はイリオスと国境を接した。\nゼーレンの新王は反イリオスを掲げ、和平を説いた者を牢に入れた。\nノクス城から、助けを求める早馬が来た。",
   devLevel: 7,
   ease: { hp:2, str:1 },
-  base: { at:[3, 30], look:"castle", shop:["iron_sword", "iron_lance", "iron_axe", "iron_bow", "javelin", "hand_axe", "steel_sword", "steel_lance", "steel_axe", "steel_bow", "fire", "thunder", "wind", "heal_staff", "high_heal_staff"] },
+  base: { at:[52, 58], look:"castle", shop:["iron_sword", "iron_lance", "iron_axe", "iron_bow", "javelin", "hand_axe", "steel_sword", "steel_lance", "steel_axe", "steel_bow", "fire", "thunder", "wind", "heal_staff", "high_heal_staff"] },
   villages: {
-    "14,5": { name:"山すその村", title:"古い剣", text:"「ゼーレンの兵に取られる前に、あんたたちに使ってほしい」", reward:"鋼の大剣", item:"steel_great_sword" },
-    "8,14": { name:"北の牧草地", title:"牧人の心づけ", text:"「ノクス様の妹君を助けに来たのかい。少ないけど、持っていきな」", reward:"1000", gold:1000 },
-    "18,20": { name:"湖畔の村", title:"岬の話", text:"「湖の岬に、昔の重装の騎士が守りの誓いを立てた祠があるのさ。重い鎧を着た者が祈ると、何か授かるって話だよ」", reward:"500", gold:500, tip:"ヒント" },
-    "13,40": { name:"西の村", title:"薬師の礼", text:"「山賊を追い払ってくれて助かったよ」", reward:"ハイヒールの杖", item:"high_heal_staff" },
-    "20,55": { name:"南の宿場", title:"一座の置き土産", text:"「旅の一座が置いていった腕輪だよ。踊り子さんの忘れ物さ」", reward:"祈りの腕輪", item:"pray_bracelet" },
-    "38,52": { name:"丘の村", title:"丘の村の礼", text:"「あの山賊、クラウス様の兵だったんだよ。鎧の下に紋が見えた」", reward:"2000", gold:2000 },
-    "43,45": { name:"湖の南の村", title:"漁師の網", text:"「湖の魚で食いつないでいるよ。これは礼だ」", reward:"1500", gold:1500 },
-    "40,10": { name:"峠の村", title:"峠の噂", text:"「ローデリヒ様は新王に忠実なお方だ。でも、先王さまのことは誰も口にしない」", reward:"スピードリング", item:"speed_ring" },
-    "44,16": { name:"湖の北の村", title:"天騎士の噂", text:"「白い天馬の騎士団が、ゼーレン城に入っていったよ。シルフェの騎士だって」", reward:"1000", gold:1000 },
-    "8,46": { name:"森の村", title:"森番の矢", text:"「ゼーレンの兵が来たら使おうと思っていたんだ」", reward:"勇者の弓", item:"brave_bow" },
+    "4,20": { name:"山すその村", title:"古い剣", text:"「ゼーレンの兵に取られる前に、あんたたちに使ってほしい」", reward:"鋼の大剣", item:"steel_great_sword" },
+    "24,4": { name:"北の牧草地", title:"牧人の心づけ", text:"「ノクス様の妹君を助けに来たのかい。少ないけど、持っていきな」", reward:"1000", gold:1000 },
+    "36,50": { name:"湖畔の村", title:"岬の話", text:"「湖の岬に、昔の重装の騎士が守りの誓いを立てた祠があるのさ。重い鎧を着た者が祈ると、何か授かるって話だよ」", reward:"500", gold:500, tip:"ヒント" },
+    "18,28": { name:"西の村", title:"薬師の礼", text:"「山賊を追い払ってくれて助かったよ」", reward:"ハイヒールの杖", item:"high_heal_staff" },
+    "22,36": { name:"盆地の宿場", title:"一座の置き土産", text:"「旅の一座が置いていった腕輪だよ。踊り子さんの忘れ物さ」", reward:"祈りの腕輪", item:"pray_bracelet" },
+    "34,30": { name:"丘の村", title:"丘の村の礼", text:"「あの山賊、クラウス様の兵だったんだよ。鎧の下に紋が見えた」", reward:"2000", gold:2000 },
+    "28,34": { name:"泉の村", title:"泉番の礼", text:"「崖に囲まれて、泉の水だけが頼りさ。これは礼だ」", reward:"1500", gold:1500 },
+    "20,18": { name:"峠の村", title:"峠の噂", text:"「ローデリヒ様は新王に忠実なお方だ。でも、先王さまのことは誰も口にしない」", reward:"スピードリング", item:"speed_ring" },
+    "32,18": { name:"盆地の北の村", title:"天騎士の噂", text:"「白い天馬の騎士団が、ゼーレン城に入っていったよ。シルフェの騎士だって」", reward:"1000", gold:1000 },
+    "10,47": { name:"森の村", title:"森番の矢", text:"「ゼーレンの兵が来たら使おうと思っていたんだ」", reward:"勇者の弓", item:"brave_bow" },
   },
   holds: {
     // ロイヤルナイト3人が生きていれば、エルンストの騎士の指輪がヴィオラに渡る
-    "30,30": { name:"ヘルマンの城", gold:1500, text:"ヘルマンの城の旗を下ろした。", if:{ alive:["benedikt", "dirk", "otto"] }, ifText:"ロイヤルナイト3人が生きている", give:{ viola:"knight_ring" } },
-    "30,7": { name:"ローデリヒの城", gold:1500, text:"北の城を落とした。" },
-    "30,52": { name:"クラウスの城", gold:1500, text:"南の城を落とした。" },
+    "7,36": { name:"ヘルマンの城", gold:1500, text:"ヘルマンの城の旗を下ろした。", if:{ alive:["benedikt", "dirk", "otto"] }, ifText:"ロイヤルナイト3人が生きている", give:{ viola:"knight_ring" } },
+    "13,8": { name:"ローデリヒの城", gold:1500, text:"北の城を落とした。" },
+    "43,30": { name:"クラウスの城", gold:1500, text:"北東の城を落とした。" },
   },
-  goal: { type:"seize", at:[57, 30], text:"レオニダスでゼーレン城を制圧する", gold:3000 },
+  goal: { type:"seize", at:[43, 6], text:"レオニダスでゼーレン城を制圧する", gold:3000 },
   lose: ["leonidas"],
   pass: [
-    // 東の川の橋: ローデリヒとクラウスが倒れるまで、ジークムントが上げたまま
-    { tiles:[[49, 30]], to:"bridge", open:{ dead:["roderich", "klaus"] }, text:"上がったままの橋。北と南の城の主が倒れるまで、砦の兵が下ろさない", banner:"橋が下りた" },
+    // ゼーレン城の前の川の橋: ローデリヒとクラウスが倒れるまで、城の兵が上げたまま
+    { tiles:[[43, 17]], to:"bridge", open:{ dead:["roderich", "klaus"] }, text:"上がったままの橋。北と北東の城の主が倒れるまで、ゼーレン城の兵が下ろさない", banner:"橋が下りた" },
   ],
-  // 印のない場所: 湖の岬の祠。グスタフが調べると追撃リング
+  // 印のない場所: 南の湖のほとりの岬の祠。グスタフが調べると追撃リング
   spots: {
-    "39,31": { by:{ name:"gustav" }, act:"祈る", scene:"c2_cape", name:"湖の岬", title:"岬の祠", text:"苔むした祠の奥に、古い指輪が納められていた。", item:"pursuit_ring" },
+    "30,53": { by:{ name:"gustav" }, act:"祈る", scene:"c2_cape", name:"湖の岬", title:"岬の祠", text:"苔むした祠の奥に、古い指輪が納められていた。", item:"pursuit_ring" },
   },
   events: [
-    { when:{ near:{ at:[16, 30], r:6 } }, scene:"c2_nox", at:[16, 30] },     // ノクス城に近づく
+    { when:{ near:{ at:[26, 48], r:6 } }, scene:"c2_nox", at:[26, 48] },     // ノクス城に近づく
   ],
   hooks: {
     start: "c2_open",
     win: "c2_win",
     turn: { 2:"c2_t2" },
-    boss: { hermann:"c2_hermann", roderich:"c2_roderich", klaus:"c2_klaus", siegmund:"c2_siegmund", oswald:"c2_oswald" },
-    take: { "30,30":"c2_take1", "30,7":"c2_take2", "30,52":"c2_take3" },
-    visit: { "18,20":"c2_v_lake", "38,52":"c2_v_hill" },
+    boss: { hermann:"c2_hermann", roderich:"c2_roderich", klaus:"c2_klaus", oswald:"c2_oswald" },
+    take: { "7,36":"c2_take1", "13,8":"c2_take2", "43,30":"c2_take3" },
+    visit: { "36,50":"c2_v_lake", "34,30":"c2_v_hill" },
     talk: {
       "leonidas>viola": { scene:"c2_viola", recruit:true },
       "leonidas>felix": { scene:"c2_felix", recruit:true },
@@ -1768,111 +1758,111 @@ chapter({
 
 return v; })(), units: (() => { let v; const units = o => { v = o; };
 /* 第2章の顔ぶれ。who:"id" はキャラ(characters/ の初期値)。cls・weapon は表の id。ally:true は同盟軍(緑の駒、自分で動いて戦う)。
-   西の本営から、ノクス城の救援 → ヘルマンの城 → 北のローデリヒと南のクラウス → 東の川の橋・ジークムントの砦 → ゼーレン城へ。 */
+   南東の本営(第1章の本営と同じ城)から、ノクス城の救援 → 北西のヘルマンの城 → さらに北のローデリヒと北東のクラウス → 川の橋の先のゼーレン城へ。
+   真ん中は崖に囲まれた村々の盆地で、入り口は北西だけ。 */
 units({
-  deploy: [[3, 29], [4, 29], [4, 31], [3, 31], [2, 29], [2, 31], [5, 29], [5, 31], [2, 30], [4, 28], [3, 28], [4, 32], [3, 32], [5, 28], [5, 32], [6, 29], [6, 31]],
+  deploy: [[52, 57], [51, 58], [53, 58], [51, 57], [53, 57], [52, 59], [50, 58], [54, 58], [51, 59], [53, 59], [50, 57], [54, 57], [52, 56], [51, 56], [53, 56], [50, 59], [54, 59]],
   join: [],
   foes: [
-    // ── ノクス城(同盟、門は西): ヴィオラとロイヤルナイト3人。城から動かずに戦う
-    { who:"viola", lv:4, x:16, y:30, ally:true, ai:"hold" },
-    { who:"otto", label:"ロイヤルナイト", lv:8, x:12, y:30, ally:true, ai:"hold" },
-    { who:"benedikt", label:"ロイヤルナイト", lv:7, x:13, y:29, ally:true, ai:"hold" },
-    { who:"dirk", label:"ロイヤルナイト", lv:6, x:13, y:31, ally:true, ai:"hold" },
-    // ── ノクス城を囲むヘルマンの兵(城へ攻めかかる。門は西なので回り込む)
-    { name:"ヘルマンの兵", cls:"cavalier", lv:4, weapon:"iron_lance", x:15, y:25, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:17, y:25, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"archer", lv:4, weapon:"iron_bow", x:19, y:26, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"mage", lv:3, weapon:"fire", x:19, y:25, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"fighter", lv:4, weapon:"iron_axe", x:15, y:35, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:17, y:35, ai:"charge", goal:[16, 30], gold:300 },
-    { name:"ヘルマンの兵", cls:"mage", lv:4, weapon:"fire", x:19, y:34, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:21, y:29, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"fighter", lv:4, weapon:"hand_axe", x:21, y:31, ai:"charge", goal:[16, 30] },
-    { name:"ヘルマンの兵", cls:"mage", lv:4, weapon:"fire", x:19, y:35, ai:"charge", goal:[16, 30] },
+    // ── ノクス城(同盟、門は北): ヴィオラとロイヤルナイト3人。城から動かずに戦う
+    { who:"viola", lv:4, x:26, y:48, ally:true, ai:"hold" },
+    { who:"otto", label:"ロイヤルナイト", lv:8, x:26, y:44, ally:true, ai:"hold" },
+    { who:"benedikt", label:"ロイヤルナイト", lv:7, x:27, y:45, ally:true, ai:"hold" },
+    { who:"dirk", label:"ロイヤルナイト", lv:6, x:25, y:45, ally:true, ai:"hold" },
+    // ── ノクス城を囲むヘルマンの兵(城へ攻めかかる。門は北)
+    { name:"ヘルマンの兵", cls:"cavalier", lv:4, weapon:"iron_lance", x:20, y:43, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:23, y:42, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"archer", lv:4, weapon:"iron_bow", x:29, y:42, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"mage", lv:3, weapon:"fire", x:30, y:42, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"fighter", lv:4, weapon:"iron_axe", x:32, y:43, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"lance_knight", lv:4, weapon:"iron_lance", x:19, y:46, ai:"charge", goal:[26, 48], gold:300 },
+    { name:"ヘルマンの兵", cls:"mage", lv:4, weapon:"fire", x:33, y:46, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"sword_fighter", lv:4, weapon:"iron_sword", x:20, y:49, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"fighter", lv:4, weapon:"hand_axe", x:32, y:49, ai:"charge", goal:[26, 48] },
+    { name:"ヘルマンの兵", cls:"mage", lv:4, weapon:"fire", x:33, y:47, ai:"charge", goal:[26, 48] },
     // ── ヘルマンの城の中
-    { name:"ヘルマンの兵", cls:"archer", lv:6, weapon:"iron_bow", x:28, y:28, ai:"hold" },
-    { name:"ヘルマンの兵", cls:"guardian", lv:6, weapon:"iron_sword", x:28, y:30, ai:"hold" },
-    { name:"ヘルマンの兵", cls:"lance_knight", lv:6, weapon:"steel_lance", x:28, y:32, ai:"hold" },
-    { name:"ヘルマンの兵", cls:"mage", lv:6, weapon:"thunder", x:31, y:28, ai:"hold" },
-    { who:"hermann", label:"ゼーレンの貴族", lv:9, x:30, y:30, ai:"hold", boss:true, drop:"knight_killer" },
+    { name:"ヘルマンの兵", cls:"archer", lv:6, weapon:"iron_bow", x:9, y:34, ai:"hold" },
+    { name:"ヘルマンの兵", cls:"guardian", lv:6, weapon:"iron_sword", x:9, y:36, ai:"hold" },
+    { name:"ヘルマンの兵", cls:"lance_knight", lv:6, weapon:"steel_lance", x:9, y:38, ai:"hold" },
+    { name:"ヘルマンの兵", cls:"mage", lv:6, weapon:"thunder", x:6, y:34, ai:"hold" },
+    { who:"hermann", label:"ゼーレンの貴族", lv:9, x:7, y:36, ai:"hold", boss:true, drop:"knight_killer" },
     // ── 北の城(ローデリヒ)の中
-    { name:"ローデリヒの兵", cls:"archer", lv:7, weapon:"steel_bow", x:28, y:7, ai:"hold" },
-    { name:"ローデリヒの兵", cls:"guardian", lv:7, weapon:"steel_sword", x:30, y:9, ai:"hold" },
-    { name:"ローデリヒの兵", cls:"fighter", lv:7, weapon:"steel_axe", x:32, y:7, ai:"hold", gold:500 },
-    { name:"ローデリヒの兵", cls:"mage", lv:7, weapon:"fire", x:29, y:6, ai:"hold" },
-    { who:"roderich", label:"ゼーレンの貴族", lv:10, x:30, y:7, ai:"hold", boss:true, drop:"power_ring" },
-    // ── 南の城(クラウス)の中
-    { name:"クラウスの兵", cls:"archer", lv:7, weapon:"steel_bow", x:28, y:52, ai:"hold" },
-    { name:"クラウスの兵", cls:"guardian", lv:7, weapon:"steel_sword", x:30, y:50, ai:"hold" },
-    { name:"クラウスの兵", cls:"mage", lv:7, weapon:"thunder", x:32, y:52, ai:"hold" },
-    { name:"クラウスの兵", cls:"sword_fighter", lv:7, weapon:"steel_sword", x:31, y:53, ai:"hold", gold:500 },
-    { who:"klaus", label:"ゼーレンの貴族", lv:10, x:30, y:52, ai:"hold", boss:true, drop:"magic_ring" },
-    // ── 東: ジークムントの砦(橋の向こう)
-    { name:"ジークムントの兵", cls:"guardian", lv:8, weapon:"steel_sword", x:51, y:29, ai:"hold" },
-    { name:"ジークムントの兵", cls:"guardian", lv:8, weapon:"steel_sword", x:51, y:31, ai:"hold" },
-    { name:"ジークムントの兵", cls:"archer", lv:8, weapon:"steel_bow", x:52, y:28, ai:"hold" },
-    { name:"ジークムントの兵", cls:"archer", lv:8, weapon:"steel_bow", x:52, y:32, ai:"hold" },
-    { who:"siegmund", label:"ゼーレンの貴族", lv:5, x:51, y:30, ai:"hold", boss:true, drop:"shield_ring", gold:0 },
+    { name:"ローデリヒの兵", cls:"archer", lv:7, weapon:"steel_bow", x:11, y:8, ai:"hold" },
+    { name:"ローデリヒの兵", cls:"guardian", lv:7, weapon:"steel_sword", x:13, y:10, ai:"hold" },
+    { name:"ローデリヒの兵", cls:"fighter", lv:7, weapon:"steel_axe", x:15, y:8, ai:"hold", gold:500 },
+    { name:"ローデリヒの兵", cls:"mage", lv:7, weapon:"fire", x:12, y:7, ai:"hold" },
+    { who:"roderich", label:"ゼーレンの貴族", lv:10, x:13, y:8, ai:"hold", boss:true, drop:"power_ring" },
+    // ── 北東の城(クラウス)の中
+    { name:"クラウスの兵", cls:"archer", lv:7, weapon:"steel_bow", x:41, y:30, ai:"hold" },
+    { name:"クラウスの兵", cls:"guardian", lv:7, weapon:"steel_sword", x:43, y:32, ai:"hold" },
+    { name:"クラウスの兵", cls:"mage", lv:7, weapon:"thunder", x:45, y:30, ai:"hold" },
+    { name:"クラウスの兵", cls:"sword_fighter", lv:7, weapon:"steel_sword", x:44, y:29, ai:"hold", gold:500 },
+    { who:"klaus", label:"ゼーレンの貴族", lv:10, x:43, y:30, ai:"hold", boss:true, drop:"magic_ring" },
+    // ── 橋の向こう: ゼーレン城の門前
+    { name:"ゼーレン兵", cls:"guardian", lv:8, weapon:"steel_sword", x:42, y:12, ai:"hold" },
+    { name:"ゼーレン兵", cls:"guardian", lv:8, weapon:"steel_sword", x:44, y:12, ai:"hold" },
+    { name:"ゼーレン兵", cls:"archer", lv:8, weapon:"steel_bow", x:41, y:13, ai:"hold" },
+    { name:"ゼーレン兵", cls:"archer", lv:8, weapon:"steel_bow", x:45, y:13, ai:"hold" },
     // ── ゼーレン城の中
-    { name:"ゼーレン近衛", cls:"guardian", lv:8, weapon:"steel_sword", x:55, y:29, ai:"hold" },
-    { name:"ゼーレン近衛", cls:"guardian", lv:8, weapon:"steel_sword", x:55, y:31, ai:"hold" },
-    { name:"ゼーレン近衛", cls:"mage", lv:8, weapon:"blaze", x:57, y:28, ai:"hold" },
-    { name:"ゼーレン近衛", cls:"archer", lv:8, weapon:"steel_bow", x:57, y:32, ai:"hold" },
-    { name:"ゼーレン近衛", cls:"sword_fighter", lv:8, weapon:"steel_sword", x:58, y:30, ai:"hold", gold:800 },
-    { who:"oswald", label:"ゼーレンの新王", lv:6, x:57, y:30, ai:"hold", boss:true, drop:"silver_sword" },
+    { name:"ゼーレン近衛", cls:"guardian", lv:8, weapon:"steel_sword", x:42, y:8, ai:"hold" },
+    { name:"ゼーレン近衛", cls:"guardian", lv:8, weapon:"steel_sword", x:44, y:8, ai:"hold" },
+    { name:"ゼーレン近衛", cls:"mage", lv:8, weapon:"blaze", x:41, y:6, ai:"hold" },
+    { name:"ゼーレン近衛", cls:"archer", lv:8, weapon:"steel_bow", x:45, y:6, ai:"hold" },
+    { name:"ゼーレン近衛", cls:"sword_fighter", lv:8, weapon:"steel_sword", x:43, y:5, ai:"hold", gold:800 },
+    { who:"oswald", label:"ゼーレンの新王", lv:6, x:43, y:6, ai:"hold", boss:true, drop:"silver_sword" },
   ],
   reinforce: [
-    // ── ヘルマンの城を取ると: 北と南から討伐軍
-    { on:{ taken:[30, 30] }, text:"北と南の城から討伐軍が出た", foes:[
-      { name:"ローデリヒの兵", cls:"axe_rider", lv:6, weapon:"iron_axe", x:30, y:13, ai:"charge" },
-      { name:"ローデリヒの兵", cls:"lance_knight", lv:6, weapon:"iron_lance", x:31, y:13, ai:"charge" },
-      { name:"ローデリヒの兵", cls:"fighter", lv:6, weapon:"iron_axe", x:29, y:13, ai:"charge" },
-      { name:"ローデリヒの兵", cls:"archer", lv:6, weapon:"iron_bow", x:30, y:14, ai:"charge" },
-      { name:"ローデリヒの兵", cls:"sword_rider", lv:6, weapon:"iron_sword", x:32, y:12, ai:"charge" },
-      { name:"クラウスの兵", cls:"lance_knight", lv:6, weapon:"iron_lance", x:30, y:46, ai:"charge" },
-      { name:"クラウスの兵", cls:"mage", lv:6, weapon:"fire", x:31, y:46, ai:"charge" },
-      { name:"クラウスの兵", cls:"sword_fighter", lv:6, weapon:"iron_sword", x:29, y:46, ai:"charge" },
-      { name:"クラウスの兵", cls:"archer", lv:6, weapon:"iron_bow", x:30, y:45, ai:"charge" },
-      { name:"クラウスの兵", cls:"cavalier", lv:6, weapon:"iron_lance", x:32, y:47, ai:"charge" },
+    // ── ヘルマンの城を取ると: 北と北東から討伐軍
+    { on:{ taken:[7, 36] }, text:"北と北東の城から討伐軍が出た", foes:[
+      { name:"ローデリヒの兵", cls:"axe_rider", lv:6, weapon:"iron_axe", x:13, y:14, ai:"charge" },
+      { name:"ローデリヒの兵", cls:"lance_knight", lv:6, weapon:"iron_lance", x:14, y:14, ai:"charge" },
+      { name:"ローデリヒの兵", cls:"fighter", lv:6, weapon:"iron_axe", x:12, y:14, ai:"charge" },
+      { name:"ローデリヒの兵", cls:"archer", lv:6, weapon:"iron_bow", x:13, y:15, ai:"charge" },
+      { name:"ローデリヒの兵", cls:"sword_rider", lv:6, weapon:"iron_sword", x:15, y:13, ai:"charge" },
+      { name:"クラウスの兵", cls:"lance_knight", lv:6, weapon:"iron_lance", x:43, y:36, ai:"charge" },
+      { name:"クラウスの兵", cls:"mage", lv:6, weapon:"fire", x:44, y:36, ai:"charge" },
+      { name:"クラウスの兵", cls:"sword_fighter", lv:6, weapon:"iron_sword", x:42, y:36, ai:"charge" },
+      { name:"クラウスの兵", cls:"archer", lv:6, weapon:"iron_bow", x:43, y:37, ai:"charge" },
+      { name:"クラウスの兵", cls:"cavalier", lv:6, weapon:"iron_lance", x:45, y:35, ai:"charge" },
     ] },
-    // 山賊に化けたクラウスの兵が、南の村を襲う
-    { on:{ taken:[30, 30] }, text:"南の村に山賊が出た", foes:[
-      { name:"山賊", label:"山賊(クラウスの兵)", cls:"fighter", lv:5, weapon:"iron_axe", x:2, y:44, ai:"raider", target:"13,40" },
-      { name:"山賊", label:"山賊(クラウスの兵)", cls:"thief", lv:4, weapon:"iron_sword", x:12, y:58, ai:"raider", target:"20,55", gold:500 },
-      { name:"山賊", label:"山賊(クラウスの兵)", cls:"fighter", lv:5, weapon:"iron_axe", x:44, y:58, ai:"raider", target:"38,52" },
-      { name:"山賊", label:"山賊(クラウスの兵)", cls:"fighter", lv:5, weapon:"hand_axe", x:46, y:52, ai:"raider", target:"43,45" },
+    // 山賊に化けたクラウスの兵が、盆地の村々を襲う
+    { on:{ taken:[7, 36] }, text:"盆地の村に山賊が出た", foes:[
+      { name:"山賊", label:"山賊(クラウスの兵)", cls:"fighter", lv:5, weapon:"iron_axe", x:17, y:15, ai:"raider", target:"18,28" },
+      { name:"山賊", label:"山賊(クラウスの兵)", cls:"thief", lv:4, weapon:"iron_sword", x:21, y:13, ai:"raider", target:"22,36", gold:500 },
+      { name:"山賊", label:"山賊(クラウスの兵)", cls:"fighter", lv:5, weapon:"iron_axe", x:30, y:14, ai:"raider", target:"34,30" },
+      { name:"山賊", label:"山賊(クラウスの兵)", cls:"fighter", lv:5, weapon:"hand_axe", x:24, y:20, ai:"raider", target:"28,34" },
     ] },
     // 村に居合わせたフェリクスとルゥ(同盟軍): 村を回って山賊と戦う
-    { on:{ taken:[30, 30] }, foes:[
-      { who:"felix", lv:6, x:19, y:54, ally:true, goal:[[20, 52], [13, 41], [24, 56]] },
-      { who:"lou", lv:2, x:20, y:56, ally:true, ai:"guard", goal:[[20, 55]] },
+    { on:{ taken:[7, 36] }, foes:[
+      { who:"felix", lv:6, x:22, y:33, ally:true, goal:[[21, 36], [18, 29], [28, 35]] },
+      { who:"lou", lv:2, x:23, y:36, ally:true, ai:"guard", goal:[[22, 36]] },
     ] },
-    // ── ローデリヒの城を取ると: 南の城から傭兵隊と騎士団
-    { on:{ taken:[30, 7] }, text:"クラウスが傭兵隊と騎士団を出した", foes:[
-      { who:"weiss", label:"傭兵", lv:9, x:30, y:44, ai:"charge" },
-      { name:"傭兵", cls:"sword_fighter", lv:7, weapon:"steel_sword", x:29, y:44, ai:"charge" },
-      { name:"傭兵", cls:"fighter", lv:7, weapon:"steel_axe", x:31, y:44, ai:"charge" },
-      { name:"傭兵", cls:"archer", lv:7, weapon:"steel_bow", x:30, y:43, ai:"charge" },
-      { name:"クラウスの騎士", cls:"cavalier", lv:7, weapon:"steel_lance", x:28, y:46, ai:"charge" },
-      { name:"クラウスの騎士", cls:"lance_knight", lv:7, weapon:"steel_lance", x:32, y:46, ai:"charge" },
-      { name:"クラウスの騎士", cls:"sword_rider", lv:7, weapon:"steel_sword", x:27, y:45, ai:"charge" },
+    // ── ローデリヒの城を取ると: 北東の城から傭兵隊と騎士団
+    { on:{ taken:[13, 8] }, text:"クラウスが傭兵隊と騎士団を出した", foes:[
+      { who:"weiss", label:"傭兵", lv:9, x:43, y:38, ai:"charge" },
+      { name:"傭兵", cls:"sword_fighter", lv:7, weapon:"steel_sword", x:42, y:38, ai:"charge" },
+      { name:"傭兵", cls:"fighter", lv:7, weapon:"steel_axe", x:44, y:38, ai:"charge" },
+      { name:"傭兵", cls:"archer", lv:7, weapon:"steel_bow", x:43, y:39, ai:"charge" },
+      { name:"クラウスの騎士", cls:"cavalier", lv:7, weapon:"steel_lance", x:41, y:36, ai:"charge" },
+      { name:"クラウスの騎士", cls:"lance_knight", lv:7, weapon:"steel_lance", x:45, y:36, ai:"charge" },
+      { name:"クラウスの騎士", cls:"sword_rider", lv:7, weapon:"steel_sword", x:40, y:37, ai:"charge" },
     ] },
     // ── クラウスの城を取ると: ゼーレン城から天騎士団(隊長ミルカ)とゼーレン騎士団
-    { on:{ taken:[30, 52] }, text:"ゼーレン城から天騎士団と騎士団が出撃した", foes:[
-      { who:"milka", label:"天騎士団の隊長", lv:7, x:56, y:27, ai:"charge", goal:[3, 30] },
-      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"iron_lance", x:57, y:27, ai:"charge", goal:[3, 30] },
-      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"slim_lance", x:58, y:27, ai:"charge", goal:[3, 30] },
-      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"javelin", x:56, y:33, ai:"charge", goal:[3, 30] },
-      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"iron_lance", x:57, y:33, ai:"charge", goal:[3, 30] },
-      { name:"ゼーレン騎士", cls:"cavalier", lv:7, weapon:"steel_lance", x:54, y:27, ai:"charge" },
-      { name:"ゼーレン騎士", cls:"lance_knight", lv:7, weapon:"steel_lance", x:54, y:33, ai:"charge" },
-      { name:"ゼーレン騎士", cls:"sword_rider", lv:7, weapon:"steel_sword", x:56, y:30, ai:"charge" },
-      { name:"ゼーレン騎士", cls:"axe_rider", lv:7, weapon:"steel_axe", x:58, y:31, ai:"charge" },
+    { on:{ taken:[43, 30] }, text:"ゼーレン城から天騎士団と騎士団が出撃した", foes:[
+      { who:"milka", label:"天騎士団の隊長", lv:7, x:40, y:7, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"iron_lance", x:40, y:6, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"slim_lance", x:40, y:5, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"javelin", x:46, y:7, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"iron_lance", x:46, y:6, ai:"charge", goal:[52, 58] },
+      { name:"ゼーレン騎士", cls:"cavalier", lv:7, weapon:"steel_lance", x:40, y:9, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"lance_knight", lv:7, weapon:"steel_lance", x:46, y:9, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"sword_rider", lv:7, weapon:"steel_sword", x:43, y:7, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"axe_rider", lv:7, weapon:"steel_axe", x:44, y:5, ai:"charge" },
     ] },
   ],
 });
 
-return v; })(), map: "mmmMmmmmM.Mm....MMm..MMMm.MM...MMM.MMM.M.M.MM....WFm^..^m.^^\nmmMmmmmM.M...M..MM.MMMM.m.MM.MMM..mMM..MmM..m....W.m^.m.m^..\nmmmmmmm.......................F...^...^...mmm....W.mm.m.^m^.\nmMMMmm.F..........................^.m..^....m.^..W.m..mmm.^m\nmMmmm......F...F........F.F.......^.m^^.^.mm.....W..m.m....m\nMmMmMM.F....F.V.......F....XXXXXXX.^..m.m^m......W.m.m.^.^..\nmMmM.m.....F...............X.....X.^m...^..^.mm..W...^..^m.m\nmm..m......FF............F.X..K..X^m^^....m^.^...WF^.^m.m...\nmMmmM.........F.....F......X.....X^^m...mm...^^..W..m.m.....\n.M.MM....FF..........F..FF.X.....X.......F.......W.m...^..^.\nMM.MM..F.........F......F.FX.....X.....FV...F...FW......F.F.\n.mM.m.........F..FF........XXXGXXX...F...F.....F.W...F.F....\n...Mmm.......F........RRRRRRRRRRRRRRRRRRRRRRRRRR.W..F...FFF.\nMMm..m................R.......F................R.WFFFF.FFF..\n...F.F..VFF.........F.R....F...................R.W.F.F.FFF.F\nF.F...F........F..FF..R....F..................FR.WFF.FFF.FF.\n...F.F......F...F.....R..F.....F.........F..V..R.W.FFFF.FF..\n..F............F....FFRFFF.F.....F........FF...R.W.....FFF.F\n.....FF.F.FFF..F....FFR..F.....F...............R.W.FFFFFFFF.\n.....FFFFF.F.......F.FRFF...........F..FF...F..R.W.F...FF...\n.....FFF..FFFF.F..VFFFR.FF....................FR.W.F.FFF.FF.\n.F...FFFFFFF..F...FFFFRF.F....F........WWWW....R.W.....F...F\n.....FFFFFFFF..F...FFFRFFF..........F.WWWWWW...R.W.......F..\n.....FFFFF.F.F.......FRFFF...........WWWWWWWW..R.W........F.\n.....F.FF.FFFF........R..............WWWWWWWW..R.W.F...F....\n.F....FFFFFFFF.....F..R..........F..WWWWWWWWWW.RFW..........\n.....FFF.FFFFF...FF...RFF.F..F......WWWWWWWWWW.R.W.F.XXXXXXX\n............XXXXXXX.FFR.F.XXXXXXX..FWWWWWWWWWW.R.W...X.....X\n...FF...F...X.....X...R...X.....X...WWWWWWWWWW.R.W...X.....X\nF......F....X.....X.F.R...X.....X...WWWWWWWWWW.R.W...X.....X\n...KRRRRRRRRG...K.XRRRRRRRG...K.X..SSWWWWWWWWWWRRWRTRG...K.X\n.F..........X.....X...R...X.....X.......WWWWWW.R.W...X.....X\n..F.........X.....XF..R...X.....X...WWWWWWWWWW.RFW...X.....X\nFF...F......XXXXXXX...R...XXXXXXX..FWWWWWWWWWW.RFW.F.X.....X\n...F..................R.............WWWWWWWWWW.R.WF.FXXXXXXX\n...F..................RF.....F.F....WWWWWWWWWW.R.W.......F..\n.............F...FF.FFRFFF.....F.....WWWWWWWW..R.W..........\n......FFFF..F.F....F..RF.F...........WWWWWWWW..R.W..........\n..F...FFFF....F....FFFRFF........F....WWWWWW...R.W.....F..F.\n......FFF.FFFFF......FRF.F.......F.....WWWW....RFW..........\n......FFFFFFFVF....FF.R.....F.....F.FF.........R.W.FFF...F.F\n...F..FFFF.FFFF.....FFRF......FF...F....F......RFW..F.FFFFF.\n......FF.FFFFFF.....FFRFFF.F....F.F..FF.......FR.W.FF..FF.F.\n.F......FFFFFFF....F.FRFFFF......F.FF..........R.W.FF.F..F.F\nF..................F.FRF.FF..F......F........F.R.W.F.FFFFF..\n..........F...........R....F.....F...F...F.V.F.R.W.FFFF.FF..\n.......FV.F.F........FR......F...........FF.F..R.W.FFFF.FFF.\n......................RRRRRRRRRRRRRRRRRRRRRRRRRR.W..FFF.FF..\n...............FF.......F..XXXGXXXFF...........F.W.FF.FFFF..\nF...................FF..F..X.....X......F.....F..W..m..m.m.m\n.............F...........F.X.....X......^....^...W..mm......\n.F.........................X.....X.^^..^^.^....F.W.m^^..m.m.\n...FF.FF...F.F..F..........X..K..X^.^.V^.^^......W.m^m^m.m.m\n..................F........X.....X......^...^.^.FW..^...mm.m\n...........F..........FF..FXXXXXXX..^.^..^......FW.mm.^mm.mm\nF..FF............F..V......F..........^^..^^..^..W..m^.^..^m\n............F.....F...........F.....^^..^........W..m..m^mmm\n............F..........F..FFF........F...........WFm^m..m...\n.............F....F..F.F........F........F.F.....W.m..m.mmmm\n.............F.....F.F........F......F.......F.F.W.^.mmm.m..\n", land: "", scenes: "# 第2章の会話。書き方は engine/FORMAT.md の「会話」。\n\n== c2_open\n- ロウエンの国境の城。宰相の城が落ちて、ひと月が過ぎた。\n- ロウエンはアルヴァ家の預かりとなり、レオニダスは国境の守りに残っていた。\n- ロウエンの向こうは、ゼーレン王国。イリオスとは、これまで国境を接したことのない国だ。\nR cassian: ゼーレンの王が亡くなったそうだ。病ではなく、王子に討たれたと。\nL leonidas: 和平を重んじる方だった。……王子は、何を掲げている。\nR lucien: 反イリオスだよ。イリオスはロウエンを呑んだ。次はゼーレンだ、と。\nR lucien: 筋は通って聞こえる。こっちが攻め込んだわけじゃないのにね。\n- そこへ、泥にまみれた早馬が駆け込んだ。\nR 早馬[-]: アルヴァのレオニダス様に。ノクス家の、ヴィオラ様からです。\nR 早馬[-]: エルンスト様が、新王を諌めて牢に入れられました。\nR 早馬[-]: その隙に、ヘルマンという貴族がノクス城を囲んでいます。\nR 早馬[-]: 騎士団は遠くの任地にあり、城に残るのは、ロイヤルナイトの三人だけ。\nL leonidas: エルンストが……。\nR godfrey: 若。兵を出せば、ゼーレンに攻め込んだと言われます。新王の思う壺ですぞ。\nL leonidas: 分かっている。それでも、助けを求める声に門を閉ざすことはできない。\nL leonidas: 友の妹が、城ごと囲まれているのだ。騎士が剣を取るのは、こういうときのためだろう。\nL leonidas: 咎めは、私がすべて負う。\nL leonidas: ノクス城へ向かう。ヘルマンの兵を払い、ヴィオラ殿を救い出す。急ぐぞ。\n\n== c2_t2\n- 東の空に、煙が上がっている。ノクス城の方角だ。\nR luca: 城門が破られかけてる！　あの騎士たち、いつまでもつか……。\nL leonidas: 騎兵は先に出ろ。ノクス城の兵を、ひとりでも多く引きつけるんだ。\n\n== c2_nox\n- ノクス城の前で、三人の騎士が城門を背に槍を構えていた。\nR benedikt: 退くな。主が戻るまで、この門は通さん。\nR dirk: 西から旗が来るぞ！　……アルヴァの白い旗だ！\nR otto: レオニダス殿か。エルンスト様が、いちばん信を置いていた方だ。\nR viola: レオニダス様……来てくださったのですね。\n\n== c2_benedikt\nL leonidas: よく持ちこたえてくれた。あとは、私たちが引き受ける。\nR benedikt: 礼には及びません。主の留守を守るのが、我らの務めです。\nR benedikt: ただ……ヴィオラ様だけは、どうか。\n\n== c2_viola\nL leonidas: ヴィオラ殿、怪我はないか。\nR viola: はい。三人が、身を挺して守ってくれました。\nR viola: レオニダス様。どうか、兄を助けてください。\nR viola: 兄は、亡き陛下の遺志に従っただけです。イリオスと争ってはならない、と。\nL leonidas: エルンストは、私の友だ。友を牢に置いたまま、国へは帰れない。\nL leonidas: それに……和平を説く者が牢にいては、この国は止まらない。\nL leonidas: 両国のあいだに、これ以上血を流させないためにも、彼を救い出す。\nR viola: ……兄が、あなたを信じる理由が分かりました。私も、共に参ります。\n\n== c2_hermann\nR hermann: アルヴァの若造か。ゼーレンの揉め事に、よそ者が口を出すな。\nL leonidas: 主の留守に、その妹の城を囲む。それがゼーレンの騎士の作法か。\nR hermann: ヴィオラは私の妻になる女だ。兄が罪人となった今、守ってやれるのは私だけだ。\nL leonidas: 守ると言いながら、槍を向ける者を、ふつうは賊と呼ぶ。\n\n== c2_take1\n- ヘルマンの城を落とした。城の奥から、イリオス王家の使者が現れた。\nR 王家の使者[-]: レオニダス殿。陛下からのお言葉です。\nR 王家の使者[-]: 和平派のノクス家当主、エルンスト殿を救い出せ、と。\nR 王家の使者[-]: ゼーレンと事を構えるためではない。話のできる相手を、残すためだと。\nL leonidas: ……陛下のお考えは、ありがたく承りました。\nR lucien: つまり、ここから先は王家の命令ということになる。\nR lucien: うまくいけば王家の手柄。しくじれば、アルヴァの勇み足。\nL leonidas: それで構わない。手柄が誰のものになろうと、エルンストを救えればいい。\n- 北と南の城から、新王の旗を掲げた軍が出てきた。\nR cassian: 新王が貴族たちに、俺たちを討てと命じたらしい。北と南、両方からだ。\nR matthias: 東の川の橋は、上がったままです。砦の兵が守っています。\nL leonidas: 北と南の城を落とさない限り、橋は下りないか。……まずは、挟み撃ちを凌ぐ。\n\n== c2_felix\nL leonidas: 村を守ってくれたのは、君か。礼を言う。\nR felix: 礼なら歌で返してくれ。……冗談だ。俺はフェリクス、しがない楽師さ。\nL leonidas: しがない楽師にしては、風の魔法の扱いが見事だ。\nR felix: 酒場を渡り歩いてると、いろいろ覚えるんだよ。\nR felix: あの山賊、鎧の下にクラウスの紋を隠してた。貴族が自分の領地を襲わせてるんだ。\nL leonidas: 村を焼いて、それを私たちの仕業にする気か。\nR felix: たぶんね。……あんたたちについて行くと、もっと面白い歌が作れそうだ。\n\n== c2_lou\nL leonidas: 怪我はないか。危ないところだった。\nR lou: 平気。踊り子は、逃げ足と度胸で生きてるの。\nR lou: 一座とはぐれちゃって。この村で、次の祭りを待ってたんだけど……。\nL leonidas: 祭りどころではなくなったな。私たちと来るといい。少なくとも、ひとりよりは安全だ。\nR lou: じゃあ、お礼に踊ってあげる。疲れた人ほど、よく効くんだから。\n\n== c2_weiss\nL leonidas: 腕の立つ傭兵だな。クラウスに雇われたのか。\nR weiss: 金をもらった分は働く。それが傭兵の仕事だ。\nL leonidas: その腕を、村を焼く者のために振るわせるのは惜しい。三千出そう。こちらに来てくれないか。\nR weiss: ……妙な誘い方をする。貴族の坊ちゃんにしては。\n\n== c2_weiss_ok\nR weiss: 確かに受け取った。今から、俺の剣はあんたのものだ。\nL leonidas: 頼りにしている。ただ一つ、民には剣を向けないでくれ。それだけは約束してほしい。\nR weiss: ……変わった雇い主だ。まあ、約束は守る。それも傭兵の仕事だ。\n\n== c2_weiss_no\nR weiss: 金がないなら、話はここまでだ。悪く思うなよ。\n\n== c2_roderich\nR roderich: 新王陛下に刃向かう者は、誰であろうと討つ。それがゼーレンの騎士だ。\nL leonidas: その陛下が、先王に何をしたか。あなたは知っているはずだ。\nR roderich: ……知っていても、口にはせん。国が割れるよりは、ましだからな。\n\n== c2_take2\n- 北の城を落とした。南の城の方角から、傭兵の一隊が駆けてくる。\nR astrid: 南の城の主が、金で兵を集めたようね。北が落ちて慌てたのでしょう。\n\n== c2_klaus\nR klaus: 村を焼いたのは、イリオスの兵だ。そういう話にしておけば、民は新王につく。\nL leonidas: 民を焼いて、民の心をつかむつもりか。……下策だな。\nR klaus: 策に上も下もない。勝てば、それが正しい策だ。\n\n== c2_take3\n- 南の城を落とした。東のゼーレン城から、白い天馬の一団が飛び立った。\nR felix: ……あの旗。シルフェの天騎士団だ。\nR felix: なんでゼーレンに。まさか、俺を探しに……?\n\n== c2_milka\nR felix: ミルカ！　槍を下ろせ。俺だ。\nR milka: フェ、フェリクス様！？　ご無事で……！　ア、アルヴァに囚われていると聞いて……。\nR felix: 誰に聞いた。\nR milka: ゼーレンの新王に、です。お助けするなら、天騎士団の力を貸せと……。\nR felix: 囚われてるどころか、毎晩ただ飯を食わせてもらってるよ。\nR milka: そ、そんな。じゃあ私たち、騙されて……！　皆、槍を引いて！　あの方たちは味方です！\nR felix: 相変わらず、まっすぐなやつだな。……それでいい。ついて来い、ミルカ。\n\n== c2_siegmund\nR siegmund: 橋を下ろしたか。北と南の二人は、よく戦ったようだ。\nL leonidas: あなたも、新王を正しいと思って戦っているのか。\nR siegmund: 王を選ぶのは臣ではない。わしは、王都の門を守るだけだ。\n\n== c2_oswald\nR oswald: アルヴァのレオニダス。ロウエンを呑み、今度はゼーレンを呑みに来たか。\nL leonidas: 私は友を迎えに来ただけだ。……父王を討ってまで、あなたは何を得た。\nR oswald: 父は弱かった。イリオスに膝を折れば、国は残っても誇りが死ぬ。\nR oswald: 黒い外套の男が教えてくれた。強い王だけが、国を守れるとな。\nL leonidas: その男の名は。\nR oswald: 名など要らぬ。私が王であることに、変わりはない。\n\n== c2_cape\n- 湖に突き出た岬の先に、苔むした小さな祠があった。\nR gustav: 重い鎧の騎士が、ここで守りの誓いを立てたと。村の者が言っておりましたな。\nR gustav: 門を守り続けて二十年。若の背を守るのは、まだこれからです。\n- 祠の奥に、古い指輪が納められていた。\n\n== c2_light\nL seraphina: ヘレナさん。これを、受け取ってもらえますか。\nR helena: 光の剣……?　セラフィナさん、これをどこで。\nL seraphina: 湖のほとりで目が覚めたとき、手に握っていました。\nL seraphina: 私には、剣は振るえません。でも、あなたなら。\nR helena: ……大切なものなのでしょう。いいの?\nL seraphina: 何も覚えていない私が持つより、守る人の手にあるほうがいい。\nR helena: 分かりました。預かりますね。いつか、あなたが思い出す日まで。\n\n== c2_v_lake\nR 村の老婆[-]: 湖の岬に、昔の重装の騎士が守りの誓いを立てた祠があるのさ。\n  重い鎧を着た者が祈ると、何か授かるって話だよ。\n\n== c2_v_hill\nR 丘の村の男[-]: あの山賊、クラウス様の兵だったんだよ。鎧の下に紋が見えた。\n  イリオスの兵の仕業にしろって、あとで触れが回るんだろうさ。\n\n== c2_win\n- ゼーレン城を制圧した。新王オスヴァルトは捕らえられ、城の地下牢が開かれた。\nL leonidas: エルンスト。迎えに来た。\nR ernst: ……レオニダスか。妹は。\nL leonidas: 無事だ。ロイヤルナイトの三人が、命がけで守っていた。\nR ernst: そうか。……礼を言う。だが、その前に聞かせてくれ。\nR ernst: イリオスの兵がゼーレンの城を落とした。これは侵略ではないのか。\nR ernst: ロウエンを呑み、次はゼーレンを呑む。新王の言葉は、嘘ではなかったことになる。\nL leonidas: 違う。私たちは、君を救いに来た。ゼーレンを取りに来たのではない。\nL leonidas: 証を見せよう。……新王を放してくれ。\nR cassian: レオニダス！　父王を討った男だぞ。\nL leonidas: だからこそ、裁くのはゼーレンの者だ。イリオスの者ではない。\n- 縄を解かれたオスヴァルトは、何も言わずにレオニダスを見た。\nL leonidas: エルンスト。イリオスに掛け合って、必ず兵を退かせる。ロウエンからもだ。\nL leonidas: アルヴァの名にかけて約束する。\nR ernst: ……昔から、君は約束を違えたことがなかったな。\nR ernst: 信じよう。私は陛下を連れて、別の都へ移る。国を、もう一度まとめ直す。\nR ernst: ヴィオラを頼む。あの子は、君のそばのほうが安全だ。\n- エルンストは新王と共に、少ない供を連れて城を去っていった。\nR lucien: 王都の貴族たちが、これを聞いたら何と言うかな。\nR lucien: 敵の王を、捕らえて放した。手柄を捨てたって、責められるよ。\nL leonidas: 責められるのは、慣れている。……それより、黒い外套の男だ。\nL leonidas: 新王に父を討たせたのも、信者の仕業なら。ロウエンの弓の件と、同じ手だ。\nL leonidas: 国と国の間に、火をつけて回っている。\n" });
+return v; })(), map: "F.........F..F...F....F..F..F.F.....Mm..^.......F......^....\nFF.................FF.............F.MmF....F....F.......^.^.\n.....FF....F..F........FFFF.F..FFFFFMm...F....F.F...^..F....\n...FFF.FF...F.....FFF....F......FFFFMm.^....F..^.....^......\n...FFFFF.F....F...FF.F..V.F.....FFF.Mm.XXXXXXXXXF.^.F.F...^F\n...F.F.FF...F.F...FFFF.........FFF.FMmFX.......X..F.^F.^....\nF.....F...XXXXXXX..FFF.F........FFF.MmFX...K...X^.F^.^.^....\n....F.F...X.....X..FF.FF............Mm.X.......X............\nFF..F..F..X..K..X...F...F.....F.F...Mm.X.......X...F..F...^.\nF.....F...X.....X.F.F...MMMMM.F.F...Mm.X.......X....F.......\n..........X.....X.....MMMMMMMMM.....Mm^XXXXGXXXX..F.F...^...\nF.........X.....X.F...MMMMMMMMMMMF..Mm....^R.....^......^...\nF...F.F..FXXXGXXX.....MMMMMMMMMMMM..MmFF^^.R.....^..........\n.F..........FRR.......M.......MMMMM.Mm....FR...F............\nF.....F...FF..R........F........MMM.Mm.^.F.R......F^........\n............F.R........FF.....F..MMMMm..^..R.F.F..^.^.F.....\n........F.F...R...............F..MMMMm...^.R.....F....F.^..F\n.F..........F.R..............FF...MMWWWWWWWWWWWWWWWWWWWWWWWW\nF.............RRRRRRV...........V.MMM.F.F.FRF...F...FFF...F.\n..............R........F.F.........MMM.....R.F........F...F.\n..F.VF.......FR.......F............MMM.....RF...FF..F.F....F\n..........FF..R....................MMM.....R..F.F.......F...\n..FF....F.F.F.R...........F.......F.MM...F.R.......F......F.\n..F..F..F.FF..R............F........MM....FRF..F........FF.F\n..............R....F................MM...F.RFF.F.......FF..F\nF.F......F....MMM.....F.............MMMF...R.FFF...F..FFFFF.\n..FFF.........RMM....F.....F....F...MM.....R.F..F..F..FFFF..\nF..FFFF...F...RMM.....F.............MMF.......FFF.....FFFFF.\n.FFFFFF.....FFRMM.V.................MM..XXXXXXX.......FFFFF.\n...FFFFF....F.RMMM....F......F.....MMM..X.....X..F.....FF...\nF.F.FFF..F...FRMMM................VMMM.FX..K..X............F\n..F..F....F...RMMM....FF........F..MMMF.X.....XF......FFF.F.\n..........F...R.MMM...F...........MMM..FX.....X.F.F.F..FF..F\nF..F.XXXXXXX..RFMMM........F......MMM..FX.....X.............\n.....X.....X..RFMMMM.......FV....MMMM...XXXGXXX..F..........\nF.F..X.....X.FR.FMMM..........F..MMM..F....R..............F.\n.....X.K...GRRRF..MMM.V..F...F..MMM......FFR.F..............\nFF...X.....X..R...MMMMM.......MMMMM...F....R....F.F......F..\n.....X.....X..R..F.MMMMMMMMMMMMMMM.........R................\n..F..XXXXXXXF.R.F...MMMMMMMMMMMMMF..F.F.F..R.F..............\n..FF..........RF......MMMMMMMMM......F.F..FR.............F..\n...........F..R.......F.MMMMM...F.......F.FR....F.F.........\n......FF.F....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR.....F.\n...F..F.FFF...........FF..RF.....F......FFFFF..F...FR...F.F.\n.FF....FFF......F..F...XXXGXXXF.........FFFF...F....R...FFF.\n......F.FFF......F...F.X.....X......F...FFF.F.F.....R.FFFF..\n...FF.F.FFF......F....FX.....X.......FF.F.FFF..FF.FFR.FFFFF.\n..........VF......F..F.X.....X..F........F...F......R.FFFF.F\n........F.....F..F.....X..K..X.......FF.....F.......R.F.FFFF\n.......F.FFF.....F..F.FX.....X........F.......F.....R.....F.\n.F.FF.....F..F.F.......XXXXXXX......V..............FR..F....\nF.F..............F..F...F.F.............F......F....R...F...\nDDDDDDDDDDDDDDDDDDDDDDDDDDF................F......FFR...F...\nDDDDDDDDDDDDDDDDDDDDDDDDDD..F.F....FF.........FF...FR.F....F\nDDDDDDDDDDDDDDDDDDDDDDDDDD....W.FFF...F.....F.......R.......\nDDDDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWF.FF.F..F.......R.......\nDDDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWFFFFFFFF.......R.......\nDDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWF.FF..F.......R.......\nDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWWW.FF..........R......F\nDDDDDDDDDDDDDDDDDDDDDDWWWWWWWWWWWWWWWWWFF.F...FF....R.......\n", land: "............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\n............................................................\nwwwwwwwwwwwwwwwwwwwwwwwwww..mmmmm...........................\nwwwwwwwwwwwwwwwwwwwwwwwwwwmmmmmmmmmmmm......................\nwwwwwwwwwwwwwwwwwwwwwwwwwwmmmm.mmmmmmmm.....................\nwwwwwwwwwwwwwwwwwwwwwwwww...........mmmm....................\nwwwwwwwwwwwwwwwwwwwwwwww.............mmmm...................\nwwwwwwwwwwwwwwwwwwwwwww...............mmm...................\nwwwwwwwwwwwwwwwwwwwwww.................mmm..................\nwwwwwwwwwwwwwwwwwwwwww.................mmm..................\n", scenes: "# 第2章の会話。書き方は engine/FORMAT.md の「会話」。\n\n== c2_open\n- ロウエンの国境の城。宰相の城が落ちて、ひと月が過ぎた。\n- ロウエンはアルヴァ家の預かりとなり、レオニダスは国境の守りに残っていた。\n- ロウエンの向こうは、ゼーレン王国。イリオスとは、これまで国境を接したことのない国だ。\nR cassian: ゼーレンの王が亡くなったそうだ。病ではなく、王子に討たれたと。\nL leonidas: 和平を重んじる方だった。……王子は、何を掲げている。\nR lucien: 反イリオスだよ。イリオスはロウエンを呑んだ。次はゼーレンだ、と。\nR lucien: 筋は通って聞こえる。こっちが攻め込んだわけじゃないのにね。\n- そこへ、泥にまみれた早馬が駆け込んだ。\nR 早馬[-]: アルヴァのレオニダス様に。ノクス家の、ヴィオラ様からです。\nR 早馬[-]: エルンスト様が、新王を諌めて牢に入れられました。\nR 早馬[-]: その隙に、ヘルマンという貴族がノクス城を囲んでいます。\nR 早馬[-]: 騎士団は遠くの任地にあり、城に残るのは、ロイヤルナイトの三人だけ。\nL leonidas: エルンストが……。\nR godfrey: 若。兵を出せば、ゼーレンに攻め込んだと言われます。新王の思う壺ですぞ。\nL leonidas: 分かっている。それでも、助けを求める声に門を閉ざすことはできない。\nL leonidas: 友の妹が、城ごと囲まれているのだ。騎士が剣を取るのは、こういうときのためだろう。\nL leonidas: 咎めは、私がすべて負う。\nL leonidas: ノクス城へ向かう。ヘルマンの兵を払い、ヴィオラ殿を救い出す。急ぐぞ。\n\n== c2_t2\n- 西の空に、煙が上がっている。ノクス城の方角だ。\nR luca: 城門が破られかけてる！　あの騎士たち、いつまでもつか……。\nL leonidas: 騎兵は先に出ろ。ノクス城の兵を、ひとりでも多く引きつけるんだ。\n\n== c2_nox\n- ノクス城の前で、三人の騎士が城門を背に槍を構えていた。\nR benedikt: 退くな。主が戻るまで、この門は通さん。\nR dirk: 東から旗が来るぞ！　……アルヴァの白い旗だ！\nR otto: レオニダス殿か。エルンスト様が、いちばん信を置いていた方だ。\nR viola: レオニダス様……来てくださったのですね。\n\n== c2_benedikt\nL leonidas: よく持ちこたえてくれた。あとは、私たちが引き受ける。\nR benedikt: 礼には及びません。主の留守を守るのが、我らの務めです。\nR benedikt: ただ……ヴィオラ様だけは、どうか。\n\n== c2_viola\nL leonidas: ヴィオラ殿、怪我はないか。\nR viola: はい。三人が、身を挺して守ってくれました。\nR viola: レオニダス様。どうか、兄を助けてください。\nR viola: 兄は、亡き陛下の遺志に従っただけです。イリオスと争ってはならない、と。\nL leonidas: エルンストは、私の友だ。友を牢に置いたまま、国へは帰れない。\nL leonidas: それに……和平を説く者が牢にいては、この国は止まらない。\nL leonidas: 両国のあいだに、これ以上血を流させないためにも、彼を救い出す。\nR viola: ……兄が、あなたを信じる理由が分かりました。私も、共に参ります。\n\n== c2_hermann\nR hermann: アルヴァの若造か。ゼーレンの揉め事に、よそ者が口を出すな。\nL leonidas: 主の留守に、その妹の城を囲む。それがゼーレンの騎士の作法か。\nR hermann: ヴィオラは私の妻になる女だ。兄が罪人となった今、守ってやれるのは私だけだ。\nL leonidas: 守ると言いながら、槍を向ける者を、ふつうは賊と呼ぶ。\n\n== c2_take1\n- ヘルマンの城を落とした。城の奥から、イリオス王家の使者が現れた。\nR 王家の使者[-]: レオニダス殿。陛下からのお言葉です。\nR 王家の使者[-]: 和平派のノクス家当主、エルンスト殿を救い出せ、と。\nR 王家の使者[-]: ゼーレンと事を構えるためではない。話のできる相手を、残すためだと。\nL leonidas: ……陛下のお考えは、ありがたく承りました。\nR lucien: つまり、ここから先は王家の命令ということになる。\nR lucien: うまくいけば王家の手柄。しくじれば、アルヴァの勇み足。\nL leonidas: それで構わない。手柄が誰のものになろうと、エルンストを救えればいい。\n- 北と北東の城から、新王の旗を掲げた軍が出てきた。\nR cassian: 新王が貴族たちに、俺たちを討てと命じたらしい。北と北東、両方からだ。\nR matthias: ゼーレン城の前の川の橋は、上がったままです。城の兵が守っています。\nL leonidas: 北と北東の城を落とさない限り、橋は下りないか。……まずは、挟み撃ちを凌ぐ。\n\n== c2_felix\nL leonidas: 村を守ってくれたのは、君か。礼を言う。\nR felix: 礼なら歌で返してくれ。……冗談だ。俺はフェリクス、しがない楽師さ。\nL leonidas: しがない楽師にしては、風の魔法の扱いが見事だ。\nR felix: 酒場を渡り歩いてると、いろいろ覚えるんだよ。\nR felix: あの山賊、鎧の下にクラウスの紋を隠してた。貴族が自分の領地を襲わせてるんだ。\nL leonidas: 村を焼いて、それを私たちの仕業にする気か。\nR felix: たぶんね。……あんたたちについて行くと、もっと面白い歌が作れそうだ。\n\n== c2_lou\nL leonidas: 怪我はないか。危ないところだった。\nR lou: 平気。踊り子は、逃げ足と度胸で生きてるの。\nR lou: 一座とはぐれちゃって。この村で、次の祭りを待ってたんだけど……。\nL leonidas: 祭りどころではなくなったな。私たちと来るといい。少なくとも、ひとりよりは安全だ。\nR lou: じゃあ、お礼に踊ってあげる。疲れた人ほど、よく効くんだから。\n\n== c2_weiss\nL leonidas: 腕の立つ傭兵だな。クラウスに雇われたのか。\nR weiss: 金をもらった分は働く。それが傭兵の仕事だ。\nL leonidas: その腕を、村を焼く者のために振るわせるのは惜しい。三千出そう。こちらに来てくれないか。\nR weiss: ……妙な誘い方をする。貴族の坊ちゃんにしては。\n\n== c2_weiss_ok\nR weiss: 確かに受け取った。今から、俺の剣はあんたのものだ。\nL leonidas: 頼りにしている。ただ一つ、民には剣を向けないでくれ。それだけは約束してほしい。\nR weiss: ……変わった雇い主だ。まあ、約束は守る。それも傭兵の仕事だ。\n\n== c2_weiss_no\nR weiss: 金がないなら、話はここまでだ。悪く思うなよ。\n\n== c2_roderich\nR roderich: 新王陛下に刃向かう者は、誰であろうと討つ。それがゼーレンの騎士だ。\nL leonidas: その陛下が、先王に何をしたか。あなたは知っているはずだ。\nR roderich: ……知っていても、口にはせん。国が割れるよりは、ましだからな。\n\n== c2_take2\n- 北の城を落とした。北東の城の方角から、傭兵の一隊が駆けてくる。\nR astrid: 北東の城の主が、金で兵を集めたようね。北が落ちて慌てたのでしょう。\n\n== c2_klaus\nR klaus: 村を焼いたのは、イリオスの兵だ。そういう話にしておけば、民は新王につく。\nL leonidas: 民を焼いて、民の心をつかむつもりか。……下策だな。\nR klaus: 策に上も下もない。勝てば、それが正しい策だ。\n\n== c2_take3\n- 北東の城を落とした。川の向こうのゼーレン城から、白い天馬の一団が飛び立った。\nR felix: ……あの旗。シルフェの天騎士団だ。\nR felix: なんでゼーレンに。まさか、俺を探しに……?\n\n== c2_milka\nR felix: ミルカ！　槍を下ろせ。俺だ。\nR milka: フェ、フェリクス様！？　ご無事で……！　ア、アルヴァに囚われていると聞いて……。\nR felix: 誰に聞いた。\nR milka: ゼーレンの新王に、です。お助けするなら、天騎士団の力を貸せと……。\nR felix: 囚われてるどころか、毎晩ただ飯を食わせてもらってるよ。\nR milka: そ、そんな。じゃあ私たち、騙されて……！　皆、槍を引いて！　あの方たちは味方です！\nR felix: 相変わらず、まっすぐなやつだな。……それでいい。ついて来い、ミルカ。\n\n== c2_oswald\nR oswald: アルヴァのレオニダス。ロウエンを呑み、今度はゼーレンを呑みに来たか。\nL leonidas: 私は友を迎えに来ただけだ。……父王を討ってまで、あなたは何を得た。\nR oswald: 父は弱かった。イリオスに膝を折れば、国は残っても誇りが死ぬ。\nR oswald: 黒い外套の男が教えてくれた。強い王だけが、国を守れるとな。\nL leonidas: その男の名は。\nR oswald: 名など要らぬ。私が王であることに、変わりはない。\n\n== c2_cape\n- 湖のほとりの小さな岬に、苔むした祠があった。\nR gustav: 重い鎧の騎士が、ここで守りの誓いを立てたと。村の者が言っておりましたな。\nR gustav: 門を守り続けて二十年。若の背を守るのは、まだこれからです。\n- 祠の奥に、古い指輪が納められていた。\n\n== c2_light\nL seraphina: ヘレナさん。これを、受け取ってもらえますか。\nR helena: 光の剣……?　セラフィナさん、これをどこで。\nL seraphina: 湖のほとりで目が覚めたとき、手に握っていました。\nL seraphina: 私には、剣は振るえません。でも、あなたなら。\nR helena: ……大切なものなのでしょう。いいの?\nL seraphina: 何も覚えていない私が持つより、守る人の手にあるほうがいい。\nR helena: 分かりました。預かりますね。いつか、あなたが思い出す日まで。\n\n== c2_v_lake\nR 村の老婆[-]: 南の湖のほとりに、昔の重装の騎士が守りの誓いを立てた祠があるのさ。\n  重い鎧を着た者が祈ると、何か授かるって話だよ。\n\n== c2_v_hill\nR 丘の村の男[-]: あの山賊、クラウス様の兵だったんだよ。鎧の下に紋が見えた。\n  イリオスの兵の仕業にしろって、あとで触れが回るんだろうさ。\n\n== c2_win\n- ゼーレン城を制圧した。新王オスヴァルトは捕らえられ、城の地下牢が開かれた。\nL leonidas: エルンスト。迎えに来た。\nR ernst: ……レオニダスか。妹は。\nL leonidas: 無事だ。ロイヤルナイトの三人が、命がけで守っていた。\nR ernst: そうか。……礼を言う。だが、その前に聞かせてくれ。\nR ernst: イリオスの兵がゼーレンの城を落とした。これは侵略ではないのか。\nR ernst: ロウエンを呑み、次はゼーレンを呑む。新王の言葉は、嘘ではなかったことになる。\nL leonidas: 違う。私たちは、君を救いに来た。ゼーレンを取りに来たのではない。\nL leonidas: 証を見せよう。……新王を放してくれ。\nR cassian: レオニダス！　父王を討った男だぞ。\nL leonidas: だからこそ、裁くのはゼーレンの者だ。イリオスの者ではない。\n- 縄を解かれたオスヴァルトは、何も言わずにレオニダスを見た。\nL leonidas: エルンスト。イリオスに掛け合って、必ず兵を退かせる。ロウエンからもだ。\nL leonidas: アルヴァの名にかけて約束する。\nR ernst: ……昔から、君は約束を違えたことがなかったな。\nR ernst: 信じよう。私は陛下を連れて、別の都へ移る。国を、もう一度まとめ直す。\nR ernst: ヴィオラを頼む。あの子は、君のそばのほうが安全だ。\n- エルンストは新王と共に、少ない供を連れて城を去っていった。\nR lucien: 王都の貴族たちが、これを聞いたら何と言うかな。\nR lucien: 敵の王を、捕らえて放した。手柄を捨てたって、責められるよ。\nL leonidas: 責められるのは、慣れている。……それより、黒い外套の男だ。\nL leonidas: 新王に父を討たせたのも、信者の仕業なら。ロウエンの弓の件と、同じ手だ。\nL leonidas: 国と国の間に、火をつけて回っている。\n" });
 const FEATURE_LIST = [{"name": "action", "group": "スキル", "text": "行動スキル: 回復・状態をつける/治す・動かす・引き寄せ・よみがえり・能力変化(杖・リターンリングなど)", "needs": "スキル kind \"action\" と、道具(rules.toolTypes、省略時「杖」)"}, {"name": "affinity", "group": "条件", "text": "相性: 相手の武器の種類・兵種・兵種の印・スキルで数値が変わる(三すくみ・特効など)", "needs": "スキルの when.vs と add・foeAdd・mul"}, {"name": "allies", "group": "マップ", "text": "同盟軍: 緑の駒(同盟)が自分の手番に動いて敵と戦う。戦う相手(敵の勢力)と目的地を決められる(城を守る騎士・村を回る仲間など)", "needs": "units.js の foes・reinforce に ally:true(と ai・goal・vs)"}, {"name": "arena", "group": "本営", "text": "闘技場: 本営の中で戦って賞金と経験値", "needs": "章の base と units の arena"}, {"name": "aura", "group": "スキル", "text": "配る: まわり r マスの味方にスキルを配る", "needs": "スキル kind \"aura\" の give"}, {"name": "buff", "group": "スキル", "text": "能力変化: 能力や戦闘の数値を、手番の数・章のあいだ・ずっと変える(力の実・ヘイストなど)", "needs": "buff を書いた onHit・行動スキル"}, {"name": "canto", "group": "スキル", "text": "再移動: 行動のあと、残りの移動で動ける(一撃離脱・騎士の指輪など)", "needs": "スキル kind \"canto\""}, {"name": "church", "group": "マップ", "text": "教会: マスに入った味方が、お金を払ってHPを回復(と状態の治療)してもらう", "needs": "地形の church か章の churches、game.json の rules.church(値段など)"}, {"name": "classChange", "group": "成長", "text": "転職: 条件を満たすと上級兵種へ(条件は作品で決める)", "needs": "兵種の promo / from、game.json の rules.promote"}, {"name": "dash", "group": "条件", "text": "まっすぐ進んだ数: まっすぐ n マス以上進んで攻撃したときだけ効く(騎兵の突撃など)", "needs": "スキルの when.dash(相手なら when.vs.dash)"}, {"name": "events", "group": "マップ", "text": "出来事: 味方が近づいた・城を落とした・敵を倒したなどの条件で、会話・敵の動きの切り替え・品物の受け渡し・旗が起きる。話す条件、印のない場所を調べること、客(追っ手にだけ狙われる中立の人)も", "needs": "章の events・spots、hooks.talk の when、units.js の guest"}, {"name": "fixedDmg", "group": "スキル", "text": "ダメージの固定: 受けるダメージ・命中を決まった数にする(村・城の耐久など)", "needs": "数値スキルの fix"}, {"name": "hold", "group": "マップ", "text": "拠点: 章の途中で主人公が城などのマスを「制圧」できる(勝ちにはならず、印・お金・会話・通れる条件の鍵になる)", "needs": "章の holds"}, {"name": "nearby", "group": "条件", "text": "まわりの条件: まわり r マスの味方・敵の数で数値が変わる(挟撃など)", "needs": "スキルの when.near"}, {"name": "negate", "group": "スキル", "text": "封じ: まわり r マス・打ち合う相手のスキルを止める(特性の無効化など)", "needs": "スキル kind \"negate\""}, {"name": "pass", "group": "マップ", "text": "通れる条件: 地形・マス・ユニットに「通れる人」と「開く条件」を付ける(鍵の門・城を落とすと下りる橋・敵だけ通れる門など)", "needs": "地形の pass、章の pass、ユニットの pass"}, {"name": "raid", "group": "マップ", "text": "略奪: 山賊(ai raider)が村のユニットを攻撃し、HPが0で村が焼ける", "needs": "game.json の rules.villageClass(村の兵種)と、敵の ai raider"}, {"name": "ranks", "group": "装備", "text": "武器レベル: 兵種・キャラのレベルまでの武器しか使えない", "needs": "rules.ranks、品物の rank、兵種の rank"}, {"name": "shop", "group": "本営", "text": "店: 本営の中と章の合間で買う・売る・修理", "needs": "章の base.shop、品物の price"}, {"name": "shove", "group": "スキル", "text": "強制移動: 当てた相手を、離れる向きか寄せる向きへ n マス動かす(押し出しなど)", "needs": "スキル kind \"shove\""}, {"name": "status", "group": "スキル", "text": "状態: 眠り・沈黙・混乱", "needs": "スキル kind \"onHit\" の status、行動スキル do \"status\""}, {"name": "talk", "group": "マップ", "text": "会話: 隣で話すと場面が出る・仲間になる", "needs": "章の hooks.talk"}, {"name": "trigger", "group": "マップ", "text": "条件で出る増援・仲間: 拠点を取った・敵を倒した・村を訪れたなどで、敵の増援や仲間が出る", "needs": "units.js の reinforce と join の on"}, {"name": "unitFx", "group": "マップ", "text": "ユニットの種類と演出: 兵種かユニットの fx で、演出(音や見た目)を変える(城など)", "needs": "兵種かユニットの fx"}, {"name": "wear", "group": "装備", "text": "使用回数: 使うと減り、0で壊れる。店で修理", "needs": "品物の uses・repair"}];
 /* ===================== 作品データの読み込み =====================
    game/ の表・キャラ・章・絵(RAW)を、エンジンが使う形に組み立てる。
@@ -2784,7 +2774,7 @@ const villageHp = key => { const o = villageObj(key); return o ? [o.hp, o.maxhp]
 function cost(u, ch){
   const c = classOf(u), k = clsOf(ch);
   if (c.fly) return k==="x" ? Infinity : 1;   // 飛ぶ兵種: 壁のほかはどこでも1
-  if (k==="f") return c.elf || sk(u,"nimble") ? 1 : (c.cav || c.heavy) ? 3 : 2;
+  if (k==="f" && isFinite((TER[ch] || {}).cost)) return c.elf || sk(u,"nimble") ? 1 : (c.cav || c.heavy) ? 3 : 2;   // 表で cost:Infinity の森は誰も通れない(深い森)
   if (k==="m") return c.dwarf ? 3 : Infinity;
   if (k==="s") return c.cav ? 2 : 3;
   const t = TER[ch] || TER[PLAIN_CH];
