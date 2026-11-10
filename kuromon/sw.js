@@ -1,5 +1,5 @@
-// PWA(作品共通): 一度開けば電波なしで遊べるようにする。中身が変わると 6d617ab77c が変わり、古いキャッシュは捨てる。
-const CACHE = 'kuromon-6d617ab77c';
+// PWA(作品共通): 一度開けば電波なしで遊べるようにする。中身が変わると 96d23cee5a が変わり、古いキャッシュは捨てる。
+const CACHE = 'kuromon-96d23cee5a';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
