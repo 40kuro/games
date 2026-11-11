@@ -437,7 +437,7 @@ body.fitmap .unit .tkm{width:auto;height:auto;min-width:40%;padding:1px 2px;font
 </div>
 <script>
 (() => {
-const GAME = {"id": "kuromon", "title": "黒の紋章", "saveKey": "kuromon-save", "field": {"style": "diorama", "land": "grass"}, "text": {"camp": "陣営", "lord": "主人公", "defaultLord": "レオニダス", "defeat": "部隊は散った", "parts": {}, "gold": "銀", "base": "本城", "arena": "闘技場"}, "features": {"action": true, "affinity": true, "arena": true, "aura": true, "buff": true, "canto": true, "dash": true, "fixedDmg": true, "nearby": true, "negate": true, "classChange": true, "raid": true, "ranks": true, "shop": true, "shove": true, "status": true, "talk": true, "unitFx": true, "wear": true, "pass": true, "church": true, "allies": true, "hold": true, "trigger": true, "events": true}, "rules": {"defaultClass": "sword_fighter", "carry": 7, "sellRate": 0.5, "devGold": 300, "joinGold": 200, "arenaPay": 2, "arenaBouts": 10, "stats": [["hp", "HP"], ["str", "力"], ["mag", "魔力"], ["skl", "技"], ["spd", "速"], ["lck", "幸運"], ["def", "守"], ["res", "魔防"]], "healStat": "mag", "ranks": ["C", "B", "A", "★"], "statusTurns": 3, "typeSkills": {"剣": ["tri_sword"], "斧": ["tri_axe"], "槍": ["tri_lance"], "炎": ["tri_fire"], "風": ["tri_wind"], "雷": ["tri_thunder"]}, "allSkills": ["flank"], "villageClass": "village", "promote": {"lv": 10}, "church": {"price": 0, "perHp": 10, "cure": true, "base": true}}, "build": {"html": "dist/kuromon.html", "pwa": "dist/pwa"}, "publish": {"repo": "40kuro/games"}, "pwa": {"name": "黒の紋章 〜聖戦の血脈〜", "shortName": "黒の紋章", "background": "#12151d", "theme": "#12151d", "icon": "game/assets/images/ui/icon.png", "iconFrame": "#d6a84e"}};
+const GAME = {"id": "kuromon", "title": "黒の紋章", "saveKey": "kuromon-save", "field": {"style": "diorama", "land": "grass"}, "text": {"camp": "陣営", "lord": "主人公", "defaultLord": "レオニダス", "defeat": "部隊は散った", "parts": {}, "gold": "銀", "base": "本城", "arena": "闘技場"}, "features": {"action": true, "affinity": true, "arena": true, "aura": true, "buff": true, "canto": true, "dash": true, "fixedDmg": true, "nearby": true, "negate": true, "classChange": true, "raid": true, "ranks": true, "shop": true, "shove": true, "status": true, "talk": true, "unitFx": true, "wear": true, "pass": true, "church": true, "allies": true, "hold": true, "trigger": true, "squad": true, "events": true}, "rules": {"defaultClass": "sword_fighter", "carry": 7, "sellRate": 0.5, "devGold": 300, "joinGold": 200, "arenaPay": 2, "arenaBouts": 10, "stats": [["hp", "HP"], ["str", "力"], ["mag", "魔力"], ["skl", "技"], ["spd", "速"], ["lck", "幸運"], ["def", "守"], ["res", "魔防"]], "healStat": "mag", "ranks": ["C", "B", "A", "★"], "statusTurns": 3, "typeSkills": {"剣": ["tri_sword"], "斧": ["tri_axe"], "槍": ["tri_lance"], "炎": ["tri_fire"], "風": ["tri_wind"], "雷": ["tri_thunder"]}, "allSkills": ["flank"], "villageClass": "village", "promote": {"lv": 10}, "church": {"price": 0, "perHp": 10, "cure": true, "base": true}}, "build": {"html": "dist/kuromon.html", "pwa": "dist/pwa"}, "publish": {"repo": "40kuro/games"}, "pwa": {"name": "黒の紋章 〜聖戦の血脈〜", "shortName": "黒の紋章", "background": "#12151d", "theme": "#12151d", "icon": "game/assets/images/ui/icon.png", "iconFrame": "#d6a84e"}};
 const SRPG = { handlers: {}, on(ev, f){ (this.handlers[ev] = this.handlers[ev] || []).push(f); } };
 const RAW = { game: GAME, tables: {}, characters: {}, chapters: [], images: {} };
 RAW.tables.terrain = (() => { let v; const terrain = o => { v = o; };
@@ -1730,7 +1730,8 @@ RAW.chapters.push({ dir: "chapters/ch02", chapter: (() => { let v; const chapter
    城は6つ: 本営 (52,58)・ノクス城(同盟)(26,48)・ヘルマンの城 (7,36)・ローデリヒの城(北)(13,8)・クラウスの城(北東)(43,30)・ゼーレン城 (43,6)。
    ・ノクス城: ヴィオラとロイヤルナイト3人(同盟軍)がヘルマンの兵に囲まれている。急がないとヴィオラが討たれる(時間切れの仕組みは使わず、配置と強さで)。
    ・ヘルマンの城を取る: ロイヤルナイト3人が生きていればヴィオラに騎士の指輪。北と北東から討伐軍、盆地の村に山賊に化けた兵、居合わせたフェリクスとルゥ(同盟軍)。
-   ・ローデリヒの城を取る: クラウスの城から傭兵隊と騎士団(ヴァイスはレオニダスが話して3000払うと仲間に)。
+   ・ローデリヒの城を取る: クラウスの城から傭兵隊と騎士団(ヴァイスはレオニダスが話して3000払うと仲間に。傭兵隊長を倒すとエリートリング)。
+   ・本営に闘技場(7回戦)。7回戦の相手はザインで、勝つと仲間になる。盆地の泉の村 (28,34) で値切りの腕輪。
    ・クラウスの城を取る: ゼーレン城から天騎士団(隊長ミルカ。フェリクスが話すと仲間に、残りの天騎士は同盟軍に)とゼーレン騎士団。
    ・ゼーレン城の前の川の橋 (43,17) はローデリヒとクラウスが倒れると下りる。勝ちはゼーレン城の制圧(新王オスヴァルトは倒れても死なない)。
    ・南の湖のほとりの岬 (30,53) を、グスタフが調べると追撃リング。 */
@@ -1749,7 +1750,7 @@ chapter({
     "18,28": { name:"西の村", title:"薬師の礼", text:"「山賊を追い払ってくれて助かったよ」", reward:"ハイヒールの杖", item:"high_heal_staff" },
     "22,36": { name:"盆地の宿場", title:"一座の置き土産", text:"「旅の一座が置いていった腕輪だよ。踊り子さんの忘れ物さ」", reward:"祈りの腕輪", item:"pray_bracelet" },
     "34,30": { name:"丘の村", title:"丘の村の礼", text:"「あの山賊、クラウス様の兵だったんだよ。鎧の下に紋が見えた」", reward:"2000", gold:2000 },
-    "28,34": { name:"泉の村", title:"泉番の礼", text:"「崖に囲まれて、泉の水だけが頼りさ。これは礼だ」", reward:"1500", gold:1500 },
+    "28,34": { name:"泉の村", title:"泉番の礼", text:"「崖に囲まれて、泉の水だけが頼りさ。行商人が置いていった腕輪だ。これを着けて店に行くと、なぜか安くしてもらえるんだと」", reward:"値切りの腕輪", item:"bargain_bracelet" },
     "20,18": { name:"峠の村", title:"峠の噂", text:"「ローデリヒ様は新王に忠実なお方だ。でも、先王さまのことは誰も口にしない」", reward:"スピードリング", item:"speed_ring" },
     "32,18": { name:"盆地の北の村", title:"天騎士の噂", text:"「白い天馬の騎士団が、ゼーレン城に入っていったよ。シルフェの騎士だって」", reward:"1000", gold:1000 },
     "10,47": { name:"森の村", title:"森番の矢", text:"「ゼーレンの兵が来たら使おうと思っていたんだ」", reward:"勇者の弓", item:"brave_bow" },
@@ -1876,13 +1877,26 @@ units({
     ] },
     // ── ローデリヒの城を取ると: 北東の城から傭兵隊と騎士団
     { on:{ taken:[13, 8] }, text:"クラウスが傭兵隊と騎士団を出した", foes:[
+      { name:"傭兵隊長", cls:"wanderer", label:"傭兵隊の長", lv:6, weapon:"steel_sword", x:44, y:39, ai:"charge", boss:true, drop:"elite_ring" },
       { who:"weiss", label:"傭兵", lv:9, x:43, y:38, ai:"charge" },
       { name:"傭兵", cls:"sword_fighter", lv:7, weapon:"steel_sword", x:42, y:38, ai:"charge" },
       { name:"傭兵", cls:"fighter", lv:7, weapon:"steel_axe", x:44, y:38, ai:"charge" },
       { name:"傭兵", cls:"archer", lv:7, weapon:"steel_bow", x:43, y:39, ai:"charge" },
+      { name:"傭兵", cls:"lance_knight", lv:7, weapon:"steel_lance", x:39, y:38, ai:"charge" },
+      { name:"傭兵", cls:"sword_fighter", lv:7, weapon:"iron_sword", x:41, y:38, ai:"charge" },
+      { name:"傭兵", cls:"fighter", lv:7, weapon:"hand_axe", x:45, y:38, ai:"charge" },
+      { name:"傭兵", cls:"mage", lv:7, weapon:"fire", x:42, y:39, ai:"charge" },
+      { name:"傭兵", cls:"archer", lv:7, weapon:"iron_bow", x:46, y:39, ai:"charge", gold:500 },
       { name:"クラウスの騎士", cls:"cavalier", lv:7, weapon:"steel_lance", x:41, y:36, ai:"charge" },
       { name:"クラウスの騎士", cls:"lance_knight", lv:7, weapon:"steel_lance", x:45, y:36, ai:"charge" },
       { name:"クラウスの騎士", cls:"sword_rider", lv:7, weapon:"steel_sword", x:40, y:37, ai:"charge" },
+      { name:"クラウスの騎士", cls:"cavalier", lv:7, weapon:"iron_lance", x:42, y:35, ai:"charge" },
+      { name:"クラウスの騎士", cls:"lance_knight", lv:7, weapon:"iron_lance", x:44, y:35, ai:"charge" },
+      { name:"クラウスの騎士", cls:"axe_rider", lv:7, weapon:"steel_axe", x:46, y:35, ai:"charge" },
+      { name:"クラウスの騎士", cls:"bow_rider", lv:7, weapon:"iron_bow", x:39, y:36, ai:"charge" },
+      { name:"クラウスの騎士", cls:"guardian", lv:7, weapon:"steel_sword", x:46, y:36, ai:"charge" },
+      { name:"クラウスの騎士", cls:"sword_rider", lv:7, weapon:"iron_sword", x:47, y:36, ai:"charge" },
+      { name:"クラウスの騎士", cls:"cavalier", lv:7, weapon:"javelin", x:40, y:35, ai:"charge" },
     ] },
     // ── クラウスの城を取ると: ゼーレン城から天騎士団(隊長ミルカ)とゼーレン騎士団
     { on:{ taken:[43, 30] }, text:"ゼーレン城から天騎士団と騎士団が出撃した", foes:[
@@ -1891,11 +1905,31 @@ units({
       { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"slim_lance", x:40, y:5, ai:"charge", goal:[52, 58] },
       { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"javelin", x:46, y:7, ai:"charge", goal:[52, 58] },
       { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"iron_lance", x:46, y:6, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"slim_lance", x:41, y:5, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"javelin", x:45, y:5, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"iron_lance", x:48, y:6, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"slim_lance", x:48, y:7, ai:"charge", goal:[52, 58] },
+      { name:"天騎士", cls:"pegasus_knight", lv:6, weapon:"iron_lance", x:48, y:8, ai:"charge", goal:[52, 58] },
       { name:"ゼーレン騎士", cls:"cavalier", lv:7, weapon:"steel_lance", x:40, y:9, ai:"charge" },
       { name:"ゼーレン騎士", cls:"lance_knight", lv:7, weapon:"steel_lance", x:46, y:9, ai:"charge" },
       { name:"ゼーレン騎士", cls:"sword_rider", lv:7, weapon:"steel_sword", x:43, y:7, ai:"charge" },
       { name:"ゼーレン騎士", cls:"axe_rider", lv:7, weapon:"steel_axe", x:44, y:5, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"cavalier", lv:7, weapon:"steel_lance", x:41, y:8, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"lance_knight", lv:7, weapon:"iron_lance", x:42, y:9, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"sword_rider", lv:7, weapon:"iron_sword", x:44, y:9, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"bow_rider", lv:7, weapon:"steel_bow", x:45, y:8, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"guardian", lv:7, weapon:"steel_sword", x:46, y:8, ai:"charge" },
+      { name:"ゼーレン騎士", cls:"cavalier", lv:7, weapon:"javelin", x:42, y:6, ai:"charge", gold:800 },
     ] },
+  ],
+  arena: [   // 闘技場の相手(1回戦から順に)。本営の中の仲間が戦える。7回戦は名を伏せた剣闘士ザイン(勝つと仲間になる)
+    { name:"国境の力自慢", cls:"fighter", lv:5, weapon:"iron_axe", gold:400 },
+    { name:"流れの剣士", cls:"sword_fighter", lv:6, weapon:"iron_sword", gold:600 },
+    { name:"ゼーレンの脱走兵", cls:"lance_knight", lv:7, weapon:"steel_lance", gold:800 },
+    { name:"山の弓取り", cls:"archer", lv:8, weapon:"steel_bow", gold:1000 },
+    { name:"元騎兵", cls:"cavalier", lv:8, weapon:"steel_lance", gold:1200 },
+    { name:"闘技場の古株", cls:"fighter", lv:10, weapon:"steel_axe", gold:1500, drop:"power_ring" },
+    { who:"zain", label:"名を伏せた剣闘士", lv:12, gold:2000, recruit:true },
   ],
 });
 
@@ -1908,7 +1942,8 @@ RAW.chapters.push({ dir: "chapters/ch03", chapter: (() => { let v; const chapter
    ・北の城を取る: オスヴァルトは西の城へ逃げ、エルンストを問い詰める。西の城からエルンストとノクス騎士団。アンセルムとクラリスが訪ねてきて、真実の塔へ。セラフィナがさらわれる(会話だけ)。
      ヴィオラがエルンストに話すと、エルンストは西の城へ戻り(withdraw)、オスヴァルトに討たれる(正規の道)。レオニダスも話せる(話したあとは戦う)。エルンストはとても強い。
    ・西の城を取る(オスヴァルトを倒す): ヴェラが海賊の根城から逃げ出し(門が開く)、アンセルムとクラリスが塔から出てくる。3人とも出たときから仲間で、海賊に追われる。
-   ・勝ちは海賊の根城の制圧(門はヴェラが逃げるまで閉じている)。 */
+   ・北の城を取ると、西の城に雇われたドラクトの竜騎士部隊(傭兵)も西の空から来る。部隊長を倒すとヒールの腕輪。
+   ・勝ちは海賊の根城の制圧(門はヴェラが逃げるまで閉じている)。門の前の海賊の小頭を倒すとレッグリング。 */
 chapter({
   no: 3,
   part: 1,
@@ -2010,6 +2045,20 @@ units({
     { name:"海賊", cls:"pirate", lv:10, weapon:"hand_axe", x:65, y:5, ai:"hold" },
     { name:"海賊", cls:"archer", lv:10, weapon:"steel_bow", x:61, y:7, ai:"hold" },
     { name:"海賊", cls:"pirate", lv:10, weapon:"steel_axe", x:65, y:7, ai:"hold", gold:1000 },
+    // 海賊の小頭(中ボス): 北の城を取ると、部下10人を連れて根城から北の城へ攻めてくる。部下が3割を切ると根城へ引き上げ、補ってまた来る
+    { name:"海賊の小頭", cls:"warrior", label:"根城の門番頭", lv:6, weapon:"steel_axe", x:57, y:6, ai:"guard", boss:true, drop:"leg_ring",
+      squad:{ home:[58, 6], goal:[41, 33], back:0.3, on:{ taken:[41, 33] }, text:"海賊の小頭が、手下を連れて北の城へ攻めてくる", backText:"手下を減らした海賊の小頭が、根城へ引き上げていく", foes:[
+        { name:"海賊", cls:"pirate", lv:9, weapon:"steel_axe" },
+        { name:"海賊", cls:"pirate", lv:9, weapon:"iron_axe" },
+        { name:"海賊", cls:"pirate", lv:9, weapon:"hand_axe" },
+        { name:"海賊", cls:"pirate", lv:9, weapon:"iron_axe" },
+        { name:"海賊", cls:"pirate", lv:9, weapon:"steel_axe" },
+        { name:"海賊", cls:"pirate", lv:9, weapon:"hand_axe" },
+        { name:"海賊", cls:"archer", lv:9, weapon:"iron_bow" },
+        { name:"海賊", cls:"archer", lv:9, weapon:"steel_bow" },
+        { name:"海賊", cls:"sword_fighter", lv:9, weapon:"iron_sword" },
+        { name:"海賊", cls:"thief", lv:9, weapon:"iron_sword" },
+      ] } },
     { name:"海賊", cls:"pirate", lv:9, weapon:"iron_axe", x:57, y:5, ai:"guard" },
     { name:"海賊", cls:"archer", lv:9, weapon:"iron_bow", x:57, y:8, ai:"guard" },
     { name:"海賊", cls:"pirate", lv:9, weapon:"iron_axe", x:50, y:6, ai:"guard" },
@@ -2032,6 +2081,24 @@ units({
       { name:"ノクスの騎士", cls:"lance_knight", lv:9, weapon:"steel_lance", x:13, y:40, ai:"charge" },
       { name:"ノクスの騎士", cls:"sword_rider", lv:9, weapon:"steel_sword", x:13, y:42, ai:"charge" },
       { name:"ノクスの騎士", cls:"bow_rider", lv:9, weapon:"steel_bow", x:12, y:43, ai:"charge" },
+      { name:"ノクスの騎士", cls:"cavalier", lv:9, weapon:"iron_lance", x:14, y:40, ai:"charge" },
+      { name:"ノクスの騎士", cls:"lance_knight", lv:9, weapon:"steel_lance", x:14, y:41, ai:"charge" },
+      { name:"ノクスの騎士", cls:"sword_rider", lv:9, weapon:"iron_sword", x:14, y:42, ai:"charge" },
+      { name:"ノクスの騎士", cls:"axe_rider", lv:9, weapon:"steel_axe", x:12, y:44, ai:"charge" },
+      { name:"ノクスの騎士", cls:"guardian", lv:9, weapon:"steel_sword", x:14, y:44, ai:"charge" },
+    ] },
+    // ── 北の城を取ると: 西の城に雇われたドラクトの竜騎士部隊(傭兵)が、西の空から来る
+    { on:{ taken:[41, 33] }, text:"西の城に雇われたドラクトの竜騎士部隊が、西の空から現れた", foes:[
+      { name:"竜騎士の部隊長", cls:"dragon_general", label:"ドラクトの傭兵", lv:5, weapon:"steel_lance", x:2, y:32, ai:"charge", boss:true, drop:"heal_bracelet" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"steel_lance", x:1, y:31, ai:"charge" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"javelin", x:3, y:31, ai:"charge" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"iron_lance", x:1, y:33, ai:"charge" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"steel_lance", x:3, y:33, ai:"charge", gold:800 },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"iron_lance", x:5, y:31, ai:"charge" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"javelin", x:5, y:32, ai:"charge" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"steel_lance", x:5, y:33, ai:"charge" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"slim_lance", x:2, y:34, ai:"charge" },
+      { name:"ドラクトの竜騎士", cls:"dragon_knight", label:"ドラクトの傭兵", lv:9, weapon:"iron_lance", x:4, y:34, ai:"charge" },
     ] },
     // ── 西の城を取ると: 逃げたヴェラを追う海賊と、塔へ船で寄せる海賊
     { on:{ taken:[5, 41] }, text:"海賊が、ヴェラと塔の二人を狙っている", foes:[
@@ -2046,7 +2113,7 @@ units({
 });
 
 return v; })(), map: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~..........MM..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~..M.........M.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~....MM.XXXXXXXXX..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~...........X.......X..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.....M.....X.......X..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.......M..^..G...K...X..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~...M...M.....X.......X..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~...M....M....X.......X..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~........M..^.XXXXXXXXX..\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~....V....M............^.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.........M............^.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~....M.............MM....\n~~~~~......~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~....MM.....MMM.MMM......\n~~~~........~~~~~~~~~~~~~~~~~~~~~~....................................\n~~~~........~~SSSSSSS~~~~~~~~~......................^.........FF^.....\n~~~~....Y...SSSSSSSSSSSSSSSSSS.................^.........M..MM........\n~~~~........~~~~~~~~~~SSSSSSS~......V...........~~~~~.........M...~~~~\n~~~~........~~~~~~~~~~~~~~~~~~........FF........~~~~~~~~~~........~~~~\n~~~~~......~~~~~~~~~~~~~~~~~~~........FF........~~~~~~~~~~........~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~..................~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~................~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~B~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~B~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~B~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~B~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~B~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~B~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~..................~~~~~~~~~~~~~~~~~~~\n~~~~~~...........~~~~~~~~~~~~~~~....................~~~~~~~~~~~~~~~~~~\n~~~..................~~~~~~~~........XXXXGXXXX............~~~~~~~~~~~~\n....................V................X.......X.................~~~~~~~\n.....................................X.......X.................~~~~~~~\n.............FFF.....................X...K...X..........V.........~~~~\n.............FFF.....................X.......X....................~~~~\n.....................................X.......X........................\n............^............FFFF........XXXXGXXXX........................\n.........................FFFF............R............................\n.XXXXXXXXX...............FFFF............R........FFF.......FF........\n.X.......X...............................R........FFF.......FF........\n.X.......X........................FF.....R........FFF.................\n.X...K...GR...........^^..........FF.....R............................\n.X.......XR............^.................R............................\n.X.......XR..............................R............................\n.XXXXXXXXXR..............................R......^^....................\n..........R..............................R......................V.....\n..........RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR............................\n..............................^..........R............................\n.........................................R................FFFF........\n.....FF..................................R................FFFF........\n.....FF..................................RRRR.........................\n.....FF.....................V...............R.........................\n................FFF.........................R.................^.......\n................FFF.........................R..........V..............\n........V.......FFF.........................R.........................\n...............................FFF..........R.........................\n...............................FFF..........R.........................\n............................................R.........................\n......................................................................\n......................................................................\n", land: "", scenes: "# 第3章の会話。書き方は engine/FORMAT.md の「会話」。\n\n== c3_open\n- ゼーレン城の戦いから、季節がひとつ巡った。\n- 新王オスヴァルトは北の都に宮廷を移し、エルンストもそれに従った。\n- レオニダスはイリオスの王都へ上り、ゼーレンの王都を返すよう、何度も願い出た。\nR 王家の使者[-]: 王家の命を伝える。アルヴァのレオニダスは、ゼーレン王都にとどまり、民を治めよ。\nL leonidas: お待ちください。私はノクス家のエルンストに、兵を退かせると約束しました。\nR 王家の使者[-]: その約束は、そなたが一人でしたもの。王家のものではない。\n- それから半年。イリオスの役人たちは、我が物顔でゼーレンの町をのし歩いた。\n- 税は重くなり、ゼーレンの民の不満は、日ごとにたまっていった。\n- そして、ゼーレン王都。\nR cassian: レオニダス。北の都で、オスヴァルトが兵を挙げた。王都を取り戻すつもりだ。\nR matthias: 北の城から出た兵が、もう王都を囲み始めています。\nR lucien: 王家からも早馬だよ。「ゼーレン王都を死守せよ」……だってさ。\nR godfrey: 若、それだけではありません。北の海の海賊が、この戦に乗じて村を襲うと。\nL leonidas: ……エルンストは、北の都にいる。\nL leonidas: この戦は、あの男との約束を破る戦だ。\nR cassian: 君が破ったんじゃない。王家が守らせなかったんだ。\nL leonidas: エルンストから見れば、同じことだ。私は、友を裏切ることになる。\nL leonidas: それでも、王都の民を見捨てることはできない。……出るぞ。\n- 城の奥の間。セラフィナが、生まれたばかりの子を抱いていた。\nR seraphina: 行くのですね。\nL leonidas: すまない。子が生まれたばかりだというのに。\nR seraphina: 謝らないでください。……ただ、無事に戻ってきて。\nL leonidas: 心配するな。必ず戻る。\nL leonidas: テオドール殿下。ひとつ、頼みがある。\nR theodor: なんだ、レオニダス。\nL leonidas: 私が戻るまで、セラフィナとこの子を守ってほしい。\nR theodor: 任せろ。アストリッドに習った剣がある。この城の誰より、しっかり守ってみせる。\nL leonidas: 頼もしいな。……頼んだぞ。\n- レオニダスは、重い心を引きずるようにして、城門へ向かった。\n\n== c3_pirates\n- 北の海の、海賊の根城。\nR 海賊[-]: お頭。ゼーレンの兵は、みんな王都の戦に出ちまった。海辺の村は、がら空きだ。\nR vera: だから何だ。\nR 海賊[-]: 今なら取り放題ってことですよ。\nR vera: 弱い者から奪うな。先代の頭が、それだけは守れと言ったはずだ。\nR vera: 私たちが襲うのは、民から搾り取った役人の船だけだ。\nR doran: ……聞いたか、野郎ども。\nR doran: こいつは、先代の義理の娘ってだけだ。血もつながっちゃいねえ。\nR doran: こんなやつの言うことなんざ、気にするこたあねえ。村を襲え。\nR vera: ドラン！　お前……！\nR doran: その女は牢に放り込んでおけ。……船を出せ！\n- 海賊の船が、南の海辺へ漕ぎ出していった。\n\n== c3_take1\n- 北の城を落とした。城にいたオスヴァルトは、わずかな供と西の城へ逃げていった。\n- 西の城。\nR oswald: エルンスト。なぜ兵を出さぬ。王都は、アルヴァの者に取られたままだぞ。\nR ernst: レオニダスは、兵を退かせると約束しました。あの男は、約束を違えたことがない。\nR oswald: 半年待った。イリオスの役人が、民から何を奪ったか見ただろう。\nR oswald: 出ぬと言うなら、お前も裏切り者だ。ノクスの家もな。\nR ernst: ……陛下。\nR ernst: 分かりました。ノクス騎士団、出る。\n- エルンストは、夜剣ノクスを手に、城門を出た。\n\n== c3_lumen\n- 落とした北の城に、二人の客が訪ねてきた。\nR anselm: レオニダス殿。急ぎ、伝えねばならぬことがあってな。\nL leonidas: アンセルム様。ルーメンの教皇が、なぜこのような戦場に。\nR clarisse: 私が護衛。教皇様をひとりで出すわけにいかないでしょ。\nR anselm: 王太子殿下が、南の戦で亡くなられた。\nL leonidas: ……殿下が。\nR anselm: 王都では、こう言われておる。アルヴァ家の当主と、ユーリク家の当主が、殿下を裏切ったと。\nL leonidas: 父が？　ありえません。父は誰よりも、殿下の信を受けていた。\nR anselm: アルヴァの当主は、行方が知れぬ。ユーリクの当主は……ご子息に討たれたと聞く。\nR emma: 弟が……父様を……？\nL leonidas: 王太子殿下を疎んでいた者たちがいたはずだ。……反王太子派の、ライゼン家とベルガ家の当主。\nR clarisse: ……私の父を、疑うのね。\nL leonidas: クラリス殿を疑ってはいない。ブルーノもだ。だが、真実は確かめねばならない。\nR anselm: わしも、アルヴァの当主が殿下を裏切ったとは思わぬ。\nR anselm: 北の海の小島に、真実の塔がある。ルーメンの血を引く者が祈れば、神は真実を示されるという。\nR anselm: わしが祈ろう。\nL leonidas: クラリス殿。真実しだいでは、父上を疑うことになる。それでも行くのか。\nR clarisse: それはそれ。教皇様をひとりで塔に行かせるほうが、よっぽど心配だもの。\nR clarisse: 父上のことは、そのときに考えるわ。\nL leonidas: ……分かった。お二人とも、気をつけて。\n- アンセルムとクラリスは、北の一本橋を渡って、真実の塔へ向かった。\n\n== c3_seraphina\n- そのころ、ゼーレン王都。\nR seraphina: 北の城が落ちたそうです。……あの人に、会いに行きます。\nR theodor: だめだ、セラフィナ。レオニダスに、守れと頼まれたんだ。\nR seraphina: 戦はもう北へ移りました。顔を見たら、すぐに戻ります。\nR seraphina: この子を、お願いできますか。殿下にしか頼めないのです。\nR theodor: ……分かった。この子は、私が守る。だから、すぐ戻ってきて。\n- セラフィナは、わずかな供を連れて城を出た。\n- 北の城へ向かう道の途中で、黒い外套の一団が、その行く手をふさいだ。\nR 黒い外套の男[-]: お迎えに上がりました。\nR seraphina: ……あなたたちは。\nR 黒い外套の男[-]: 余計なことは、すべてお忘れください。イリオスの騎士のことも、その子のことも。\n- 黒い光が、セラフィナを包んだ。\n- 誰も、それを見ていなかった。\n\n== c3_viola_ernst\nL viola: 兄上！\nR ernst: ヴィオラ……。お前も、レオニダスと共に来たのか。\nL viola: レオニダス様は、何度も王家に掛け合ってくださいました。約束を破ったのは、あの方ではありません。\nR ernst: 分かっている。……分かっているのだ。\nL viola: なら、剣を収めてください。私は、兄上と戦いたくありません。\nR ernst: ……陛下を、もう一度お諌めしよう。この戦は、ゼーレンのためにならぬ。\nR ernst: ヴィオラ。レオニダスのそばを離れるな。\nR ernst: それから、これを持っていけ。ノクスの家に伝わる、大地の剣だ。\nR ernst: 夜剣は渡せぬ。だが、この剣なら、お前を守ってくれる。\nL viola: 兄上……。\n- エルンストは、騎士団を残して、西の城へ馬を返した。\n\n== c3_ernst_end\n- 西の城。\nR ernst: 陛下。兵をお退きください。レオニダスは、ゼーレンの敵ではありません。\nR oswald: 戦のさなかに戻ってきて、言うことがそれか。\nR oswald: やはりお前は、イリオスに通じていたのだな。……裏切り者め。\nR ernst: 陛下……！\n- 城の奥で、剣の音がひとつ響いた。\nR oswald: ノクスの裏切り者は斬った。騎士団に伝えろ。退く者も同じだ、と。\n\n== c3_leonidas_ernst\nL leonidas: エルンスト。\nR ernst: レオニダスか。……約束は、どうした。\nL leonidas: 王家に、何度も願い出た。だが、聞き入れられなかった。言い訳はしない。\nR ernst: 君のことだ。言い訳などしないだろうと思っていた。\nR ernst: だが私は、陛下の臣だ。陛下が戦えと言うなら、戦うしかない。\nL leonidas: 私も、王家の命で王都を守らねばならない。……すまない、エルンスト。\nR ernst: 謝るな。剣を抜け、レオニダス。手加減はせん。\n\n== c3_ernst_fall\nR ernst: ……強くなったな、レオニダス。\nL leonidas: エルンスト……！\nR ernst: 君を……恨んではいない。ヴィオラを、頼む……。\n- エルンストの手を離れた夜剣ノクスは、いつのまにか戦場から消えていた。\n\n== c3_oswald\nR oswald: アルヴァのレオニダス。半年前、お前は私を放した。\nR oswald: その礼がこれか。イリオスの役人に、ゼーレンを好きにさせて。\nL leonidas: 返す言葉はない。……エルンストは、どうした。\nR oswald: あの男は、最後までお前を信じていた。それが、ノクスの過ちだ。\nL leonidas: 過ちではない。……あなたを、止める。\n\n== c3_oswald_fall\nR oswald: 父を討ち……友を討ち……。私は、何を守りたかったのだ……。\n- オスヴァルトは、そのまま動かなくなった。\n\n== c3_take2\n- 西の城を落とした。\n- そのころ、北の海の根城で、ひとりの女が牢を破った。\nR vera: ドランの好きにさせてたまるか。……閂は外した。\nR vera: この門が開いていれば、誰かがドランを止めに来てくれる。\nR 海賊[-]: お頭が逃げたぞ！　追え！\n\n== c3_tower\n- 真実の塔の扉が開き、アンセルムとクラリスが出てきた。\nR anselm: 神は、示された。王太子殿下を陥れたのは、反王太子派の者たちだ。\nR anselm: アルヴァの当主も、ユーリクの当主も、罪をかぶせられたにすぎぬ。\nR clarisse: ……そう。やっぱり、そうなのね。\nR clarisse: 教皇様、あれ！　海賊の船が、こっちに来る！\nR anselm: 塔で持ちこたえよう。レオニダス殿に、この真実を届けねばならぬ。\n\n== c3_anselm\nL leonidas: アンセルム様。ご無事で。\nR anselm: 神は示された。殿下を陥れたのは、反王太子派の者たちだと。\nR anselm: アルヴァの当主は、罪をかぶせられたのだ。生きておられるなら、どこかで身を隠しておられよう。\nL leonidas: ……ありがとうございます。父を、探します。\nR anselm: わしも共に行こう。真実を知った者が、黙って教会へ帰るわけにはいかぬ。\n\n== c3_clarisse\nL leonidas: クラリス殿。……父上のことは。\nR clarisse: 神様は、名前までは教えてくれなかったわ。\nR clarisse: でも、父上が殿下を嫌っていたのは本当。調べるなら、私も一緒に行く。\nL leonidas: つらい道になるかもしれない。\nR clarisse: 知らないまま父上の娘でいるほうが、ずっとつらいもの。よろしくね、レオニダス。\n\n== c3_emma_vera\nL emma: 待って。あなたが、海賊の頭だったヴェラ？\nR vera: 元、頭だ。手下に裏切られて、このざまさ。\nL emma: ……不思議。あなた、私に似てる。\nR vera: そうか？　……言われてみれば、目の色が同じだな。\n- エマの背で、鷹弓ユーリクがかすかに鳴った。\nL emma: 弓が、鳴ってる……。こんなこと、一度もなかったのに。\nR vera: その弓、私のほうへ引かれている気がする。\nL emma: ……持ってみて。\n- ヴェラが弓を握った瞬間、鷹弓ユーリクが光を放った。弦が、ひとりでに張りつめる。\nR vera: なんだ、これは……。体が、軽い。\nL emma: 鷹弓の、本当の力……。ユーリクの直系の手でしか、目覚めないはずなのに。\nL emma: 父様が言ってた。私が生まれる前に、嵐の海で行方知れずになった姉がいたって。\nL emma: ヴェラ。あなた、先代の頭に拾われたのよね。……どこで？\nR vera: 嵐のあとの海で、沈みかけた船の上だと聞いた。赤子の私は、鷹の紋の布にくるまれていたと。\nL emma: ……姉さん。\nR vera: 私に、妹が……。\nL emma: その弓は、姉さんが持って。ユーリクの弓が、そう言ってる。\nR vera: ……分かった。預かる。妹の頼みだからな。\n\n== c3_leonidas_vera\nL leonidas: 私はレオニダス。ゼーレン王都を預かっている。\nR vera: イリオスの騎士か。役人の船なら、何度も襲ったよ。\nL leonidas: 民から搾り取った船だろう。……それは、王都を預かる私の不始末でもある。\nR vera: 変わった騎士だな。エマが言ってたとおりだ。\nR vera: 根城の中のことなら、私が一番よく知ってる。ドランのところまで案内するよ。\n\n== c3_tower_wind\n- 塔の奥の小部屋。ニックが、床の古い石板のすき間に指をかけた。\nR nick: 祈りの塔にしちゃ、ずいぶん念入りな隠し場所だね。……おっと、剣だ。\n- 石板の下から、風をまとった剣が出てきた。\n\n== c3_doran\nR doran: 王都の騎士さまが、海賊の根城までご苦労なこった。\nL leonidas: 村を襲わせた罪は重い。ここで終わらせる。\nR doran: 先代の娘の言うことなんざ、もう誰も聞かねえよ。\n\n== c3_v_cape\nR 灯台守[-]: ヴェラはね、先代の頭に拾われた子なんだよ。弱い者からは取るなって、そればかり守ってた。\n\n== c3_win\n- 海賊の根城を制圧した。ドランの手下は、船を捨てて散っていった。\nR vera: ……終わったか。これで、先代に顔向けできる。\nR anselm: レオニダス殿。王都へ戻られよ。民が待っておる。\n- 王都へ戻ったレオニダスを、テオドールが城門で待っていた。腕に、赤子を抱いて。\nR theodor: レオニダス……。セラフィナが、戻らないんだ。\nR theodor: 北の城へ会いに行くって。すぐ戻るって言ったのに。\nL leonidas: ……セラフィナが？\nR theodor: 止めたんだ。でも、殿下にしか頼めないって言われて……すまない。\nL leonidas: 殿下のせいではない。この子を守ってくれて、ありがとう。\nL leonidas: セラフィナは、私が必ず見つけ出す。\n- エルンストも、オスヴァルトも、もういない。ゼーレンの王都には、イリオスの旗だけが残った。\nL leonidas: 友との約束は、守れなかった。\nL leonidas: だが、真実はつかんだ。王太子殿下を陥れた者たちを、必ず明らかにする。\n" });
-const FEATURE_LIST = [{"name": "action", "group": "スキル", "text": "行動スキル: 回復・状態をつける/治す・動かす・引き寄せ・よみがえり・能力変化(杖・リターンリングなど)", "needs": "スキル kind \"action\" と、道具(rules.toolTypes、省略時「杖」)"}, {"name": "affinity", "group": "条件", "text": "相性: 相手の武器の種類・兵種・兵種の印・スキルで数値が変わる(三すくみ・特効など)", "needs": "スキルの when.vs と add・foeAdd・mul"}, {"name": "allies", "group": "マップ", "text": "同盟軍: 緑の駒(同盟)が自分の手番に動いて敵と戦う。戦う相手(敵の勢力)と目的地を決められる(城を守る騎士・村を回る仲間など)", "needs": "units.js の foes・reinforce に ally:true(と ai・goal・vs)"}, {"name": "arena", "group": "本営", "text": "闘技場: 本営の中で戦って賞金と経験値", "needs": "章の base と units の arena"}, {"name": "aura", "group": "スキル", "text": "配る: まわり r マスの味方にスキルを配る", "needs": "スキル kind \"aura\" の give"}, {"name": "buff", "group": "スキル", "text": "能力変化: 能力や戦闘の数値を、手番の数・章のあいだ・ずっと変える(力の実・ヘイストなど)", "needs": "buff を書いた onHit・行動スキル"}, {"name": "canto", "group": "スキル", "text": "再移動: 行動のあと、残りの移動で動ける(一撃離脱・騎士の指輪など)", "needs": "スキル kind \"canto\""}, {"name": "church", "group": "マップ", "text": "教会: マスに入った味方が、お金を払ってHPを回復(と状態の治療)してもらう", "needs": "地形の church か章の churches、game.json の rules.church(値段など)"}, {"name": "classChange", "group": "成長", "text": "転職: 条件を満たすと上級兵種へ(条件は作品で決める)", "needs": "兵種の promo / from、game.json の rules.promote"}, {"name": "dash", "group": "条件", "text": "まっすぐ進んだ数: まっすぐ n マス以上進んで攻撃したときだけ効く(騎兵の突撃など)", "needs": "スキルの when.dash(相手なら when.vs.dash)"}, {"name": "events", "group": "マップ", "text": "出来事: 味方が近づいた・城を落とした・敵を倒したなどの条件で、会話・敵の動きの切り替え・品物の受け渡し・旗が起きる。話す条件、印のない場所を調べること、客(追っ手にだけ狙われる中立の人)も", "needs": "章の events・spots、hooks.talk の when、units.js の guest"}, {"name": "fixedDmg", "group": "スキル", "text": "ダメージの固定: 受けるダメージ・命中を決まった数にする(村・城の耐久など)", "needs": "数値スキルの fix"}, {"name": "hold", "group": "マップ", "text": "拠点: 章の途中で主人公が城などのマスを「制圧」できる(勝ちにはならず、印・お金・会話・通れる条件の鍵になる)", "needs": "章の holds"}, {"name": "nearby", "group": "条件", "text": "まわりの条件: まわり r マスの味方・敵の数で数値が変わる(挟撃など)", "needs": "スキルの when.near"}, {"name": "negate", "group": "スキル", "text": "封じ: まわり r マス・打ち合う相手のスキルを止める(特性の無効化など)", "needs": "スキル kind \"negate\""}, {"name": "pass", "group": "マップ", "text": "通れる条件: 地形・マス・ユニットに「通れる人」と「開く条件」を付ける(鍵の門・城を落とすと下りる橋・敵だけ通れる門など)", "needs": "地形の pass、章の pass、ユニットの pass"}, {"name": "raid", "group": "マップ", "text": "略奪: 山賊(ai raider)が村のユニットを攻撃し、HPが0で村が焼ける", "needs": "game.json の rules.villageClass(村の兵種)と、敵の ai raider"}, {"name": "ranks", "group": "装備", "text": "武器レベル: 兵種・キャラのレベルまでの武器しか使えない", "needs": "rules.ranks、品物の rank、兵種の rank"}, {"name": "shop", "group": "本営", "text": "店: 本営の中と章の合間で買う・売る・修理", "needs": "章の base.shop、品物の price"}, {"name": "shove", "group": "スキル", "text": "強制移動: 当てた相手を、離れる向きか寄せる向きへ n マス動かす(押し出しなど)", "needs": "スキル kind \"shove\""}, {"name": "status", "group": "スキル", "text": "状態: 眠り・沈黙・混乱", "needs": "スキル kind \"onHit\" の status、行動スキル do \"status\""}, {"name": "talk", "group": "マップ", "text": "会話: 隣で話すと場面が出る・仲間になる", "needs": "章の hooks.talk"}, {"name": "trigger", "group": "マップ", "text": "条件で出る増援・仲間: 拠点を取った・敵を倒した・村を訪れたなどで、敵の増援や仲間が出る", "needs": "units.js の reinforce と join の on"}, {"name": "unitFx", "group": "マップ", "text": "ユニットの種類と演出: 兵種かユニットの fx で、演出(音や見た目)を変える(城など)", "needs": "兵種かユニットの fx"}, {"name": "wear", "group": "装備", "text": "使用回数: 使うと減り、0で壊れる。店で修理", "needs": "品物の uses・repair"}];
+const FEATURE_LIST = [{"name": "action", "group": "スキル", "text": "行動スキル: 回復・状態をつける/治す・動かす・引き寄せ・よみがえり・能力変化(杖・リターンリングなど)", "needs": "スキル kind \"action\" と、道具(rules.toolTypes、省略時「杖」)"}, {"name": "affinity", "group": "条件", "text": "相性: 相手の武器の種類・兵種・兵種の印・スキルで数値が変わる(三すくみ・特効など)", "needs": "スキルの when.vs と add・foeAdd・mul"}, {"name": "allies", "group": "マップ", "text": "同盟軍: 緑の駒(同盟)が自分の手番に動いて敵と戦う。戦う相手(敵の勢力)と目的地を決められる(城を守る騎士・村を回る仲間など)", "needs": "units.js の foes・reinforce に ally:true(と ai・goal・vs)"}, {"name": "arena", "group": "本営", "text": "闘技場: 本営の中で戦って賞金と経験値", "needs": "章の base と units の arena"}, {"name": "aura", "group": "スキル", "text": "配る: まわり r マスの味方にスキルを配る", "needs": "スキル kind \"aura\" の give"}, {"name": "buff", "group": "スキル", "text": "能力変化: 能力や戦闘の数値を、手番の数・章のあいだ・ずっと変える(力の実・ヘイストなど)", "needs": "buff を書いた onHit・行動スキル"}, {"name": "canto", "group": "スキル", "text": "再移動: 行動のあと、残りの移動で動ける(一撃離脱・騎士の指輪など)", "needs": "スキル kind \"canto\""}, {"name": "church", "group": "マップ", "text": "教会: マスに入った味方が、お金を払ってHPを回復(と状態の治療)してもらう", "needs": "地形の church か章の churches、game.json の rules.church(値段など)"}, {"name": "classChange", "group": "成長", "text": "転職: 条件を満たすと上級兵種へ(条件は作品で決める)", "needs": "兵種の promo / from、game.json の rules.promote"}, {"name": "dash", "group": "条件", "text": "まっすぐ進んだ数: まっすぐ n マス以上進んで攻撃したときだけ効く(騎兵の突撃など)", "needs": "スキルの when.dash(相手なら when.vs.dash)"}, {"name": "events", "group": "マップ", "text": "出来事: 味方が近づいた・城を落とした・敵を倒したなどの条件で、会話・敵の動きの切り替え・品物の受け渡し・旗が起きる。話す条件、印のない場所を調べること、客(追っ手にだけ狙われる中立の人)も", "needs": "章の events・spots、hooks.talk の when、units.js の guest"}, {"name": "fixedDmg", "group": "スキル", "text": "ダメージの固定: 受けるダメージ・命中を決まった数にする(村・城の耐久など)", "needs": "数値スキルの fix"}, {"name": "hold", "group": "マップ", "text": "拠点: 章の途中で主人公が城などのマスを「制圧」できる(勝ちにはならず、印・お金・会話・通れる条件の鍵になる)", "needs": "章の holds"}, {"name": "nearby", "group": "条件", "text": "まわりの条件: まわり r マスの味方・敵の数で数値が変わる(挟撃など)", "needs": "スキルの when.near"}, {"name": "negate", "group": "スキル", "text": "封じ: まわり r マス・打ち合う相手のスキルを止める(特性の無効化など)", "needs": "スキル kind \"negate\""}, {"name": "pass", "group": "マップ", "text": "通れる条件: 地形・マス・ユニットに「通れる人」と「開く条件」を付ける(鍵の門・城を落とすと下りる橋・敵だけ通れる門など)", "needs": "地形の pass、章の pass、ユニットの pass"}, {"name": "raid", "group": "マップ", "text": "略奪: 山賊(ai raider)が村のユニットを攻撃し、HPが0で村が焼ける", "needs": "game.json の rules.villageClass(村の兵種)と、敵の ai raider"}, {"name": "ranks", "group": "装備", "text": "武器レベル: 兵種・キャラのレベルまでの武器しか使えない", "needs": "rules.ranks、品物の rank、兵種の rank"}, {"name": "shop", "group": "本営", "text": "店: 本営の中と章の合間で買う・売る・修理", "needs": "章の base.shop、品物の price"}, {"name": "shove", "group": "スキル", "text": "強制移動: 当てた相手を、離れる向きか寄せる向きへ n マス動かす(押し出しなど)", "needs": "スキル kind \"shove\""}, {"name": "squad", "group": "マップ", "text": "部隊: 隊長が部下を連れて目的地へ攻めてくる。部下が減ると本拠へ引き上げ、部下を補ってまた出てくる", "needs": "units.js の敵の squad(home・goal・back・foes)"}, {"name": "status", "group": "スキル", "text": "状態: 眠り・沈黙・混乱", "needs": "スキル kind \"onHit\" の status、行動スキル do \"status\""}, {"name": "talk", "group": "マップ", "text": "会話: 隣で話すと場面が出る・仲間になる", "needs": "章の hooks.talk"}, {"name": "trigger", "group": "マップ", "text": "条件で出る増援・仲間: 拠点を取った・敵を倒した・村を訪れたなどで、敵の増援や仲間が出る", "needs": "units.js の reinforce と join の on"}, {"name": "unitFx", "group": "マップ", "text": "ユニットの種類と演出: 兵種かユニットの fx で、演出(音や見た目)を変える(城など)", "needs": "兵種かユニットの fx"}, {"name": "wear", "group": "装備", "text": "使用回数: 使うと減り、0で壊れる。店で修理", "needs": "品物の uses・repair"}];
 /* ===================== 作品データの読み込み =====================
    game/ の表・キャラ・章・絵(RAW)を、エンジンが使う形に組み立てる。
    ファイルの中では id(英数字)で書き、エンジンの中とセーブでは表示名を使う。
@@ -2162,6 +2229,7 @@ const LOADED = (() => {
       else if (k === "pass") v = passRule(v, `ユニット ${spec.who || s.name}`);
       else if (k === "on") v = passOpen(v);   // 条件で加わる(engine/features/trigger)
       else if (k === "if") v = evCond(v);   // 落とし物・所持金が手に入る条件(engine/src/outcome.js)
+      else if (k === "squad") v = {...v, foes: (v.foes||[]).map(unit), ...(v.on ? {on: passOpen(v.on)} : {})};   // 部隊の部下と動き出す条件(engine/features/squad)
       o[k] = v;
     }
     return o;
@@ -2589,6 +2657,7 @@ function makeUnit(spec, team){
   if (spec.pass) u.pass = spec.pass;                                   // 通れる条件(engine/features/pass): by に合う人だけ通り抜けられ、open で消える
   if (spec.guest && team==="foe" && feat("events")){ u.team = "obj"; u.guest = true; }   // 客(engine/features/events): 味方とは戦わず、target にした敵にだけ狙われる。話して仲間にできる
   if (spec.ally && team==="foe" && feat("allies")){ u.team = "obj"; u.ally = true; if (spec.vs) u.vs = [].concat(spec.vs); }   // 同盟軍(engine/features/allies): 緑の駒で、同盟軍フェイズに自分で動いて敵と戦う
+  if (spec.squad) u.squad = spec.squad;                                 // 部隊の隊長(engine/features/squad): 部下を連れて攻め、減ると引き上げてまた出る
   if (spec.goal) u.goal = spec.goal;                                   // 目的地(engine/features/allies): 攻撃できる相手がいないとき向かう
   if (spec.tags) u.tags = spec.tags.slice();                           // ユニットの印(スキルの条件 tag で見る)    // 倒すと手に入る品物   // キャラだけのスキル
   // 持ち物: 装備中の武器(weapon)も装飾品も items に入る。装飾品は持っていれば身につける(off に入れたものは外す)
@@ -5076,6 +5145,53 @@ const rankOf = (u, t) => { const c = classOf(u), p = (HOOKS.charRanks||{})[u.nam
 const rankOk = (u, n) => { const it = WEAPONS[n] || STAVES[n];
   if (!it || !it.rank || !RANKS.length) return true; const r = rankOf(u, it.t || "杖"); return !!r && RANKS.indexOf(r) >= RANKS.indexOf(it.rank); };
 
+/* ---- engine/features/squad/squad.js  部隊: 隊長が部下を連れて攻め、減ると引き上げてまた出る(説明は同じフォルダの README.md) ---- */
+/* units.js の敵(隊長)に squad:{ home:[x,y], goal:[x,y] か [[x,y],…], back:0.3, on:{…}, waves:N, text, backText, foes:[部下…] } と書く。
+   敵軍フェイズの始めに、隊長ごとに次を見る(状態は隊長の sq に残るのでセーブに入る)。
+   - 待機(home): on を満たしていて、隊長が本拠のそば(2マス以内)にいれば、部下を foes の数まで本拠のまわりに補い、出撃(out)。
+     隊長が本拠から離れていれば、まず本拠へ戻る(back)。waves を書けば、その回数まで出撃したら出ない。
+   - 出撃(out): 隊長と部下は charge で goal へ向かう(途中で届く相手がいれば攻撃)。部下の生き残りが出撃したときの数 × back を下回ると、引き上げ(back)。
+   - 引き上げ(back): 隊長と生き残りの部下は攻撃せずに本拠へ向かう。隊長が本拠のそばに着くと待機(home)に戻り、次の敵軍フェイズにまた出る。 */
+const sqLeaders = () => units.filter(u => u.squad && u.team==="foe" && !u.dead && !u.reserve);
+const sqMen = L => units.filter(u => u.sqOf===L.sqId && u.team==="foe" && !u.dead && !u.reserve);
+const sqNear = (u, [x,y]) => Math.abs(u.x-x) + Math.abs(u.y-y) <= 2;
+const sqGoal = g => JSON.parse(JSON.stringify(g || []));
+async function squadPhase(){
+  if (!feat("squad") || !CH || over) return;
+  for (const L of sqLeaders()){
+    const S = L.squad;
+    if (!L.sq){ if (S.on && !passOpenNow(S.on)) continue; L.sqId = L.sqId || ("sq:" + L.name + ":" + S.home.join(",")); L.sq = {mode:"home", wave:0, n:0}; }
+    const Q = L.sq, men = sqMen(L);
+    if (Q.mode==="out" && men.length < Q.n * (S.back ?? 0.3)){
+      Q.mode = "back";
+      for (const u of [L, ...men]){ u.sqBack = true; u.goal = [S.home.slice()]; }
+      focusUnit(L); emit("squad", {unit:L, mode:"back"}); await banner(S.backText || `${L.name}が引き上げていく`, "foe");
+      continue;
+    }
+    if (Q.mode==="back"){ if (sqNear(L, S.home)) Q.mode = "home"; continue; }   // 着いた手番は休み、次の敵軍フェイズに出る
+    if (Q.mode!=="home") continue;
+    if (!sqNear(L, S.home)){ Q.mode = "back"; L.sqBack = true; L.goal = [S.home.slice()]; continue; }
+    if (S.waves && Q.wave >= S.waves){ L.ai = "hold"; continue; }
+    // 部下を補って出撃
+    let first = null;
+    for (const s of (S.foes||[]).slice(men.length)){
+      const u = makeUnit({...s, x:S.home[0], y:S.home[1]}, "foe"); const sp = freeSpot(u.x, u.y, u); if (!sp) continue;
+      [u.x,u.y] = sp; u.sqOf = L.sqId; units.push(u); buildUnit(u); first = first || u;
+    }
+    const all = sqMen(L);
+    for (const u of [L, ...all]){ u.sqBack = false; u.ai = "charge"; u.goal = sqGoal(S.goal); }
+    Q.mode = "out"; Q.wave++; Q.n = all.length;
+    focusUnit(L); emit("squad", {unit:L, mode:"out", wave:Q.wave}); await banner(S.text || `${L.name}が部下を連れて出撃した`, "foe");
+  }
+}
+// 引き上げ中の隊長と部下: 攻撃せずに本拠へ向かう。動いたら(着いていても)true
+async function squadBackAct(e){
+  if (!feat("squad") || !e.sqBack) return false;
+  const {dests, prev} = reach(e);
+  await goalMove(e, dests, prev);
+  return true;
+}
+
 /* ---- engine/features/status/status.js  状態 眠り・沈黙・混乱(説明は同じフォルダの README.md) ---- */
 /* 状態(眠り・沈黙・混乱): u.st = {k, t}。t は残りの手番の数で、その陣営の手番の始めに1減る */
 const ST_NAME = {sleep:"眠り", silence:"沈黙", berserk:"混乱"};
@@ -5445,6 +5561,7 @@ async function enemyAct(e){
   focusUnit(e); await wait(260);
   if (stOf(e)==="sleep"){ popup(e, "眠り", "miss"); await wait(300); return; }
   const mad = stOf(e)==="berserk";
+  if (!mad && e.sqBack && feat("squad") && await squadBackAct(e)) return;   // 部隊の引き上げ(engine/features/squad)
   if (!mad && e.ai==="raider" && feat("raid") && await raiderAct(e)) return;
   if (!mad && await foeAction(e)) return;
   const {dests, prev} = reach(e);
@@ -5543,7 +5660,8 @@ async function enemyPhase(){
   await banner("敵軍フェイズ","foe");
   await terrainChanges();
   phaseHeal("foe");
-  tickStatus("ally"); tickBuffs("ally");   // 味方の手番が終わったので、味方の状態と能力変化を1減らす
+  tickStatus("ally"); tickBuffs("ally");
+  if (feat("squad")) await squadPhase();   // 部隊の出撃・引き上げ(engine/features/squad)   // 味方の手番が終わったので、味方の状態と能力変化を1減らす
   for (const e of units.filter(u=>u.team==="foe")){
     if (over) return;
     if (e.dead || e.reserve) continue;
@@ -5988,7 +6106,7 @@ window.HK = { get units(){ return units; }, get CH(){ return CH; }, get turn(){ 
   // 使用回数・武器レベル・状態・杖の確かめ用
   get stockUsed(){ return stockUsed; }, on: (ev, f) => SRPG.on(ev, f), canStaff, inFight: (a, d, f) => { const v = VSP; VSP = [a, d]; try { return f(); } finally { VSP = v; } }, W, usesOf, usedAt, brokenAt, wearItem, rankOk, repairPrice, toStock, fromStock, addItem, inflict, stOf, tickStatus, actionsOf, actTargets, actChoices, startAction, useAction, foeAction, ACC_OF, makeUnit, buildUnit, skillsOf, rawSkills, shownSkills, movOf, addBuff, buffsOf, tickBuffs, shove, villageObj, promoWhy, promoteUnit, showUnit, showForecast, sheetHTML,
   // 通れる条件の確かめ用(engine/tests/pass.js)
-  passCheck, passStart, passBlocked, allyPhase, goalMove, holdAt, canHold, takeHold, holdTake, triggerCheck, runEvents, evWhen, spotAt, searchSpot, talkTargets, get SCENE_HOOKS(){ return SCENE_HOOKS; }, churchAt, churchPlan, canChurch, useChurch, get churchUsed(){ return churchUsed; }, get sel(){ return sel; }, set sel(v){ sel = v; }, get state(){ return state; },
+  passCheck, passStart, passBlocked, allyPhase, goalMove, squadPhase, squadBackAct, holdAt, canHold, takeHold, holdTake, triggerCheck, runEvents, evWhen, spotAt, searchSpot, talkTargets, get SCENE_HOOKS(){ return SCENE_HOOKS; }, churchAt, churchPlan, canChurch, useChurch, get churchUsed(){ return churchUsed; }, get sel(){ return sel; }, set sel(v){ sel = v; }, get state(){ return state; },
   // 起きること・条件・払うの確かめ用(engine/tests/outcome.js)
   runOutcome, applyOutcome, condMet, visit, spoils, seizeSpoils, get seen(){ return seen; }, get visited(){ return visited; }, get SCENES(){ return SCENES; }, get VILLAGES(){ return VILLAGES; },
   // 画面と行動の確かめ用(game/tests/fixes.js)
