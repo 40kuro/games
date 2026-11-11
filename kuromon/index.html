@@ -437,7 +437,7 @@ body.fitmap .unit .tkm{width:auto;height:auto;min-width:40%;padding:1px 2px;font
 </div>
 <script>
 (() => {
-const GAME = {"id": "kuromon", "title": "黒の紋章", "saveKey": "kuromon-save", "field": {"style": "diorama", "land": "grass"}, "text": {"camp": "陣営", "lord": "主人公", "defaultLord": "レオニダス", "defeat": "部隊は散った", "parts": {}, "gold": "銀", "base": "本城", "arena": "闘技場"}, "features": {"action": true, "affinity": true, "arena": true, "aura": true, "buff": true, "canto": true, "dash": true, "fixedDmg": true, "nearby": true, "negate": true, "classChange": true, "raid": true, "ranks": true, "shop": true, "shove": true, "status": true, "talk": true, "unitFx": true, "wear": true, "pass": true, "church": true, "allies": true, "hold": true, "trigger": true, "squad": true, "events": true}, "rules": {"defaultClass": "sword_fighter", "carry": 7, "sellRate": 0.5, "devGold": 300, "joinGold": 200, "arenaPay": 2, "arenaBouts": 10, "stats": [["hp", "HP"], ["str", "力"], ["mag", "魔力"], ["skl", "技"], ["spd", "速"], ["lck", "幸運"], ["def", "守"], ["res", "魔防"]], "healStat": "mag", "ranks": ["C", "B", "A", "★"], "statusTurns": 3, "typeSkills": {"剣": ["tri_sword"], "斧": ["tri_axe"], "槍": ["tri_lance"], "炎": ["tri_fire"], "風": ["tri_wind"], "雷": ["tri_thunder"]}, "allSkills": ["flank"], "villageClass": "village", "promote": {"lv": 10}, "church": {"price": 0, "perHp": 10, "cure": true, "base": true}}, "build": {"html": "dist/kuromon.html", "pwa": "dist/pwa"}, "publish": {"repo": "40kuro/games"}, "pwa": {"name": "黒の紋章 〜聖戦の血脈〜", "shortName": "黒の紋章", "background": "#12151d", "theme": "#12151d", "icon": "game/assets/images/ui/icon.png", "iconFrame": "#d6a84e"}};
+const GAME = {"id": "kuromon", "title": "黒の紋章", "saveKey": "kuromon-save", "field": {"style": "diorama", "land": "grass"}, "text": {"camp": "陣営", "lord": "主人公", "defaultLord": "レオニダス", "defeat": "部隊は散った", "parts": {}, "gold": "銀", "base": "本城", "arena": "闘技場"}, "features": {"action": true, "affinity": true, "arena": true, "aura": true, "buff": true, "canto": true, "dash": true, "fixedDmg": true, "nearby": true, "negate": true, "classChange": true, "raid": true, "ranks": true, "shop": true, "shove": true, "status": true, "talk": true, "unitFx": true, "wear": true, "pass": true, "church": true, "allies": true, "hold": true, "trigger": true, "squad": true, "events": true}, "rules": {"defaultClass": "sword_fighter", "carry": 7, "sellRate": 0.5, "devGold": 300, "joinGold": 200, "arenaPay": 2, "arenaBouts": 10, "stats": [["hp", "HP"], ["str", "力"], ["mag", "魔力"], ["skl", "技"], ["spd", "速"], ["lck", "幸運"], ["def", "守"], ["res", "魔防"]], "healStat": "mag", "ranks": ["C", "B", "A", "★"], "statusTurns": 3, "typeSkills": {"剣": ["tri_sword"], "斧": ["tri_axe"], "槍": ["tri_lance"], "炎": ["tri_fire"], "風": ["tri_wind"], "雷": ["tri_thunder"]}, "allSkills": ["flank"], "villageClass": "village", "promote": {"lv": 20}, "lvCap": 30, "promoLvCap": 30, "tierLv": 20, "expRate": 7, "killExpRate": 10, "church": {"price": 0, "perHp": 10, "cure": true, "base": true}}, "build": {"html": "dist/kuromon.html", "pwa": "dist/pwa"}, "publish": {"repo": "40kuro/games"}, "pwa": {"name": "黒の紋章 〜聖戦の血脈〜", "shortName": "黒の紋章", "background": "#12151d", "theme": "#12151d", "icon": "game/assets/images/ui/icon.png", "iconFrame": "#d6a84e"}};
 const SRPG = { handlers: {}, on(ev, f){ (this.handlers[ev] = this.handlers[ev] || []).push(f); } };
 const RAW = { game: GAME, tables: {}, characters: {}, chapters: [], images: {} };
 RAW.tables.terrain = (() => { let v; const terrain = o => { v = o; };
@@ -2323,6 +2323,8 @@ const LOADED = (() => {
     HEAL_BASE: GR.healBase ?? 8, HEAL_STAT: GR.healStat || "skl",   // 手当の回復量 = healBase + その能力
     RANKS: GR.ranks || null,   // 武器レベルの並び(低い順)。書かなければ武器レベルを見ない
     STATUS_TURNS: GR.statusTurns ?? 3,   // 眠り・沈黙・混乱が続く手番の数
+    LV_CAP: GR.lvCap ?? 15, PROMO_LV_CAP: GR.promoLvCap ?? 15, TIER_LV: GR.tierLv ?? 15,   // Lvの上限(下級・上級)と、上級Lv1を下級の何Lvぶんとみなすか
+    EXP_RATE: GR.expRate ?? 1, KILL_EXP_RATE: GR.killExpRate ?? 1,   // 経験値の倍率(ふだん・倒したとき)
     ARENA_PAY: GR.arenaPay ?? 2, ARENA_BOUTS: GR.arenaBouts ?? 10,
     CHURCH: GR.church || {},   // 教会の初期値(engine/features/church)
   };
@@ -2592,7 +2594,7 @@ function CLS(name){
   if (CLS_CACHE[name]) return CLS_CACHE[name];
   let c;
   if (CLASSES[name]) c = {...CLASSES[name], name, tier: CLASSES[name].tier === 2 ? 2 : 1};
-  else if (PROMO[name]){ const p = PROMO[name], f = CLASSES[p.from]; c = {...f, ...p, name, tier:2, b:f.b.map((v,i)=>v+p.bonus[i]), g:p.g||f.g, promo:null, promos:null, cap:15, crit:p.crit ?? f.crit, max:p.max || f.max, skills:[...(f.skills||[]), ...(p.skills||[])]}; }
+  else if (PROMO[name]){ const p = PROMO[name], f = CLASSES[p.from]; c = {...f, ...p, name, tier:2, b:f.b.map((v,i)=>v+p.bonus[i]), g:p.g||f.g, promo:null, promos:null, cap:p.cap || RULES.PROMO_LV_CAP, crit:p.crit ?? f.crit, max:p.max || f.max, skills:[...(f.skills||[]), ...(p.skills||[])]}; }
   else c = {...CLASSES[RULES.DEFAULT_CLASS || Object.keys(CLASSES)[0]], name, tier:1};
   return CLS_CACHE[name] = c;
 }
@@ -2727,7 +2729,9 @@ const isFlier = u => !!classOf(u).fly;
 // 能力の上限(兵種の max。書かなければ上限なし)
 const capOf = (u, s) => { const m = classOf(u).max; const i = ST.indexOf(s); return m && m[i] != null ? m[i] : Infinity; };
 const isCav = u => !!classOf(u).cav;
-function lvEff(u){ return u.lv + (classOf(u).tier===2 ? 15 : 0); }
+function lvEff(u){ return u.lv + (classOf(u).tier===2 ? RULES.TIER_LV : 0); }   // 経験値の計算に使うLv(上級は rules.tierLv を足す)
+// Lvの上限: 兵種の cap、なければ rules.lvCap(下級)/ promoLvCap(上級)
+const lvCapOf = c => c.cap || (c.tier===2 ? RULES.PROMO_LV_CAP : RULES.LV_CAP);
 function rangeOf(u, moved){
   const w = W(u); if (!w || isHealer(u)) return null;
   if (w.still && moved) return null;
@@ -3583,9 +3587,12 @@ function paintGround(force){
 
 /* ---- engine/src/combat.js  戦闘: 経験値とレベルアップ・一撃・反撃と追撃・押し出し・勝敗の判定 ---- */
 /* ---------- 経験値 ---------- */
+// 経験値の倍率(game.json の rules.expRate / killExpRate、省略時1)。expRate は攻撃・手当などふだんの経験値、killExpRate は倒したときの経験値
+const EXP_RATE = RULES.EXP_RATE, KILL_EXP_RATE = RULES.KILL_EXP_RATE;
+const actExp = n => n * EXP_RATE;   // 手当・鍛える・壊すなど、行動でもらう経験値
 async function gainExp(u, n){
   if (!u || u.team!=="ally" || u.dead) return;
-  const cap = classOf(u).cap || 15;
+  const cap = lvCapOf(classOf(u));
   if (u.lv >= cap || classOf(u).noExp) return;
   n *= (sk(u,"exp")||{}).n || 1;
   u.exp += Math.max(1, Math.round(n));
@@ -3604,9 +3611,9 @@ async function gainExp(u, n){
 }
 function expFor(a, d, landed, killed){
   const diff = lvEff(d) - lvEff(a);
-  if (killed) return Math.max(5, 20 + diff*3) + (d.boss ? 30 : 0);
-  if (landed) return Math.max(1, 10 + diff);
-  return 1;
+  if (killed) return (Math.max(5, 20 + diff*3) + (d.boss ? 30 : 0)) * KILL_EXP_RATE;
+  if (landed) return Math.max(1, 10 + diff) * EXP_RATE;
+  return EXP_RATE;
 }
 
 /* 確率で出るスキル(技% など)。相手の「読み」(sense)の blocks にあるものは出ない */
@@ -4110,7 +4117,7 @@ function unitTags(u){
 function sheetHTML(u, mode){
   const c = classOf(u), E = eff(u), AS = ACC_OF(u).stats || {}, r = rangeOf(u,false), face = faceSrc(nameFace(u.name));
   const rs = !r ? "—" : (r[0]===r[1] ? r[0] : `${r[0]}–${r[1]}`);
-  const cap = c.cap || 15;
+  const cap = lvCapOf(c);
   const wt = weaponTypes(u);
   // 能力のマス: 素の値を大きく、装飾品などで増減する分を後ろに「10 +5」(v は増減込み、b は素の値)
   const st = (k,v,b) => `<div class="rs-st"><span>${k}</span><div class="v"><b>${b!==undefined ? b : v}</b>${b!==undefined && b!==v ? `<i>${b>v?"":"+"}${v-b}</i>`:""}</div></div>`;
@@ -4700,7 +4707,7 @@ async function useAction(a, d, dest){
     d.dead = false; d.hp = d.maxhp; d.done = true; clearStatus(d); placeAt(d, x, y); drawHp(d); emit("revive", {a, d}); popup(d, "よみがえった", "heal"); say(`${d.name}がよみがえった。`); await wait(500);
   } else if (s.do==="buff"){ await addBuff(d, s.buff || {}, n); say(`${a.name}の${n}。`); }
   if (act.i >= 0) wearItem(a, act.i);
-  if (s.exp !== 0) await gainExp(a, s.exp ?? 12);
+  if (s.exp !== 0) await gainExp(a, actExp(s.exp ?? 12));
 }
 // 移動の "pick": 2つめの段階(行き先のマス)
 function pickDests(a, d){
@@ -5384,18 +5391,18 @@ async function confirmAction(){
     const s = sk(a,"refresh"), all = refreshTargets(a); a.refreshUsed = (a.refreshUsed||0) + 1;
     all.forEach(o => { o.done = false; popup(o, s.name, "heal"); });
     emit("skill", {unit:a, skill:s.id, name:s.name, for:all}); say(`${a.name}の${s.name}で、${all.map(o=>o.name).join("・")}がもう一度動ける。`); render(); await wait(500);
-    await gainExp(a, 10);
+    await gainExp(a, actExp(10));
   }
   else if (state==="forge"){
     const fn = sk(a,"forge").n;
     d.atkB = (d.atkB||0) + fn; a.forgeUsed = (a.forgeUsed||0) + 1;
     emit("forge", {a, d}); popup(d, `威力+${fn}`, "heal"); say(`${a.name}が${d.name}の武器を鍛え直した。`); await wait(500);
-    await gainExp(a, 10);
+    await gainExp(a, actExp(10));
   }
   else {
     const amt = Math.min(eff(a).heal, d.maxhp - d.hp); d.hp += amt; drawHp(d); emit("heal", {a, d, amt}); popup(d, "+"+amt, "heal");
     say(`${a.name}は${d.name}を${amt}回復した。`); await wait(500);
-    await gainExp(a, 12);
+    await gainExp(a, actExp(12));
   }
   busy = false; if (over) return;
   if (state==="attack" || state==="heal") return afterAct(a);
@@ -5485,7 +5492,7 @@ async function breachWall(){
   busy = true; const was = MAP[y][x];
   MAP[y] = MAP[y].slice(0,x) + PLAIN_CH + MAP[y].slice(x+1); markVisited();
   emit("breach", {unit:u, x, y}); popup({x,y}, "崩した", "crit"); say(`${u.name}が${TER[was].name}を崩した。道が開いた。`); await wait(500);
-  await gainExp(u, 10);
+  await gainExp(u, actExp(10));
   busy = false; finishUnit(true);
 }
 async function breakKiln(){
@@ -5493,7 +5500,7 @@ async function breakKiln(){
   busy = true; destroyed.add(x+","+y); const was = MAP[y][x];
   MAP[y] = MAP[y].slice(0,x) + PLAIN_CH + MAP[y].slice(x+1); markVisited();
   emit("destroy", {unit:u, x, y}); popup({x,y}, "破壊", "crit"); say(`${u.name}が${TER[was].name}を壊した。`); await wait(500);
-  await gainExp(u, 10);
+  await gainExp(u, actExp(10));
   busy = false; finishUnit(true);
 }
 function toggleThreat(){ showAllThreat = !showAllThreat; refreshAllThreat(); render(); }
@@ -6111,7 +6118,7 @@ window.HK = { get units(){ return units; }, get CH(){ return CH; }, get turn(){ 
   runOutcome, applyOutcome, condMet, visit, spoils, seizeSpoils, get seen(){ return seen; }, get visited(){ return visited; }, get SCENES(){ return SCENES; }, get VILLAGES(){ return VILLAGES; },
   // 画面と行動の確かめ用(game/tests/fixes.js)
   targetsAny, armFor, enterTarget, confirmAction, backToMenu, finishUnit, canRewind, rewindTurn, snapTurn, cycleZoom, get zoom(){ return zoom; }, villageGift, baseChurch, glyphOf, cost, renderActions, selectUnit,  get MAP(){ return MAP; }, get taken(){ return taken; }, get flags(){ return flags; }, set turn(v){ turn = v; },
-  AI: { reach, pathTo, walk, combat, calc, canHit, targetsFrom, canCounter, threatOf, distanceField, rangeOf, K, XY, ter, hostile, alive, eff, isHealer, classOf, gainExp, drawHp, sk, doubles, aspd } };
+  AI: { reach, pathTo, walk, combat, calc, canHit, targetsFrom, canCounter, threatOf, distanceField, rangeOf, K, XY, ter, hostile, alive, eff, isHealer, classOf, gainExp, actExp, drawHp, sk, doubles, aspd } };
 
 })();
 </script>
